@@ -8,8 +8,12 @@ using static SharpStone.Platform.OpenGL.GL;
 using static SharpStone.Logging;
 
 namespace SharpStone.Renderer.OpenGL;
-internal unsafe class OpenGLRenderer : IRenderApi
+internal unsafe class OpenGLRenderer : IRenderApi, IRenderFactory, IRenderCommands
 {
+    public IRenderCommands Commands => this;
+
+    public IRenderFactory Factory => this;
+
     public void Clear()
     {
         glClear((uint)(AttribMask.ColorBufferBit | AttribMask.DepthBufferBit));

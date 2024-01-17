@@ -1,6 +1,10 @@
 ﻿using SharpStone.Core;
 using SharpStone.Events;
+using SharpStone.Layers;
+using SharpStone.Renderer;
+using SharpStone.Resources;
 using SharpStone.Setup;
+using SharpStone.Window;
 using static SharpStone.Logging;
 
 namespace SharpStone;
@@ -9,7 +13,7 @@ public sealed class Application(IConfigurationManager config, IServiceRegistery 
 {
     public IConfigurationManager Config { get; } = config;
     public IServiceRegistery Services { get; } = services;
-    public IResourceManager Resources { get; } = services.GetService<IResourceManager>();
+    public IResourceManager Resources { get; } = services.GetService<ResourceManager>();
     public bool IsRunning { get; private set; }
 
     private bool Init()
@@ -34,7 +38,18 @@ public sealed class Application(IConfigurationManager config, IServiceRegistery 
 
     public static IApplicationBuilder Create(params object[] args)
     {
-        return new ApplicationBuilder(args);
+        var builder =  new ApplicationBuilder(args);
+        
+        builder.Config(RenderApi.OpenGL);
+
+        builder.AddService(new WindowService());
+        builder.AddService(new RenderService());
+        builder.AddService(new ResourceManager());
+        builder.AddService(new LayerService());
+
+        builder.AddLayer(new DebugLayer());
+
+        return builder;
     }
 
     public void Run()

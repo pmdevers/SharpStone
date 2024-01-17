@@ -11,8 +11,8 @@ internal class ServiceRegistery() : IServiceRegistery
     public void AddService(IService service) 
         => _services.Add(service);
     
-    public T GetService<T>() where T : IService
-        => _services.OfType<T>().First();
+    public T GetService<T>() where T : IService, new()
+        => _services.OfType<T>().FirstOrDefault() ?? new T();
 
     public bool Init(Application app) 
     {

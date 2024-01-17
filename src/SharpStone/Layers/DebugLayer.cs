@@ -1,6 +1,7 @@
 ﻿using SharpStone.Core;
 using SharpStone.Renderer;
 using SharpStone.Maths;
+using System.Runtime.CompilerServices;
 
 namespace SharpStone.Layers;
 
@@ -9,7 +10,7 @@ internal unsafe class DebugLayer : ILayer<DebugLayer>
     public string Name => "DebugLayer";
 
     private IVertexArray _vba;
-
+    
     public static DebugLayer Create()
     {
         return new DebugLayer();
@@ -29,9 +30,9 @@ internal unsafe class DebugLayer : ILayer<DebugLayer>
             2, 3, 0
         ];
 
-        _vba = renderApi.CreateVertexArray();
-        var vertexBuffer = renderApi.CreateVertexBuffer(positions, 2);
-        var indexBuffer = renderApi.CreateIndexBuffer(indices, 1);
+        _vba = renderApi.Factory.CreateVertexArray();
+        var vertexBuffer = renderApi.Factory.CreateVertexBuffer(positions, 2);
+        var indexBuffer = renderApi.Factory.CreateIndexBuffer(indices, 1);
 
         vertexBuffer.Layout.Add(
             new BufferElement() { 
@@ -45,7 +46,7 @@ internal unsafe class DebugLayer : ILayer<DebugLayer>
         _vba.AddVertexBuffer(vertexBuffer);
         _vba.SetIndexBuffer(indexBuffer);
 
-        var shader = renderApi.CreateShader("default", _vertShader, _fragmentShader);
+        var shader = renderApi.Factory.CreateShader("default", _vertShader, _fragmentShader);
         shader.Bind();      
 
         return true;
@@ -53,11 +54,9 @@ internal unsafe class DebugLayer : ILayer<DebugLayer>
 
     public void Update(IRenderApi renderApi)
     {
-        renderApi.SetClearColor(Color.CornflowerBlue);
-        renderApi.Clear();
-        
-        //renderApi.DrawArrays(vba, 3);
-        renderApi.DrawIndexed(_vba);
+        renderApi.Commands.SetClearColor(Color.CornflowerBlue);
+        renderApi.Commands.Clear();
+        renderApi.Commands.DrawIndexed(_vba);
     }
          
 
