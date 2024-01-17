@@ -8,7 +8,7 @@ internal unsafe class DebugLayer : ILayer<DebugLayer>
 {
     public string Name => "DebugLayer";
 
-    private IVertexArray vba;
+    private IVertexArray _vba;
 
     public static DebugLayer Create()
     {
@@ -29,14 +29,21 @@ internal unsafe class DebugLayer : ILayer<DebugLayer>
             2, 3, 0
         ];
 
-        vba = renderApi.CreateVertexArray();
+        _vba = renderApi.CreateVertexArray();
         var vertexBuffer = renderApi.CreateVertexBuffer(positions, 2);
         var indexBuffer = renderApi.CreateIndexBuffer(indices, 1);
 
-        vertexBuffer.Layout = new BufferLayout([ new BufferElement() {  Name = "Index", Type = ShaderDataType.Float, Size = sizeof(float) * 2, Offset = 0, Normalized = false }]);
+        vertexBuffer.Layout.Add(
+            new BufferElement() { 
+                Name = "Index", 
+                Type = ShaderDataType.Float, 
+                Size = sizeof(float) * 2, 
+                Offset = 0, 
+                Normalized = false 
+            });
 
-        vba.AddVertexBuffer(vertexBuffer);
-        vba.SetIndexBuffer(indexBuffer);
+        _vba.AddVertexBuffer(vertexBuffer);
+        _vba.SetIndexBuffer(indexBuffer);
 
         var shader = renderApi.CreateShader("default", _vertShader, _fragmentShader);
         shader.Bind();      
@@ -50,7 +57,7 @@ internal unsafe class DebugLayer : ILayer<DebugLayer>
         renderApi.Clear();
         
         //renderApi.DrawArrays(vba, 3);
-        renderApi.DrawIndexed(vba);
+        renderApi.DrawIndexed(_vba);
     }
          
 

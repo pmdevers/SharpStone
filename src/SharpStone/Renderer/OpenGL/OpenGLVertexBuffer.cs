@@ -16,7 +16,7 @@ internal unsafe class OpenGLVertexBuffer<T> : IVertextBuffer
         glBufferData(BufferTargetARB.ArrayBuffer, size, _data, BufferUsageARB.StaticDraw);
     }
 
-    public BufferLayout Layout { get; set; } = new BufferLayout([]);
+    public BufferLayout Layout { get; set; } = [];
 
     public void Bind()
     {

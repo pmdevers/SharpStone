@@ -1,13 +1,12 @@
 ﻿using SharpStone.Core;
-using System;
-using System.Collections;
+
 using static SharpStone.Logging;
 
 namespace SharpStone.Renderer;
 
 public interface IVertextBuffer : IRenderObject
 {
-    BufferLayout Layout { get; set; }
+    BufferLayout Layout { get; }
 }
 
 public enum ShaderDataType
@@ -15,34 +14,24 @@ public enum ShaderDataType
     None = 0, Float, Float2, Float3, Float4, Mat3, Mat4, Int, Int2, Int3, Int4, Bool
 }
 
-
-public class BufferLayout : IEnumerable<BufferElement>
+public class BufferLayout : List<BufferElement>
 {
-    private readonly List<BufferElement> _elements = [];
     private int _stride = 0;
 
-    public BufferLayout(List<BufferElement> elements)
+    public BufferLayout()
     {
-        _elements = elements;
         CalculateOffsetAndStride();
     }
 
     public int Stride => _stride;
-    public BufferElement[] Elements => _elements.ToArray();
-
-    public IEnumerator<BufferElement> GetEnumerator()
-        => _elements.GetEnumerator();
-
-    IEnumerator IEnumerable.GetEnumerator()
-        => _elements.GetEnumerator();
-
+    public BufferElement[] Elements => ToArray();
     private void CalculateOffsetAndStride()
     {
         int offset = 0;
         _stride = 0;
-        for (int i = 0; i < _elements.Count; i++)
+        for (int i = 0; i < Count; i++)
         {
-            BufferElement element = _elements[i];
+            BufferElement element = this[i];
             element.Offset = offset;
             offset += element.Size;
             _stride += element.Size;
