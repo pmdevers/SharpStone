@@ -1,13 +1,12 @@
 ﻿using SharpStone.Core;
 using SharpStone.Events;
-
+using System.Collections;
 using static SharpStone.Logging;
 
 namespace SharpStone.Layers;
 
 public class LayerStack : ILayerStack
 {
-    private Application _app;
     private int _layerIndex = 0;
     private readonly List<ILayer> _layers = [];
 
@@ -33,37 +32,6 @@ public class LayerStack : ILayerStack
         _layers.Remove(overlay);
     }
 
-    public bool Init(Application app) 
-    {
-        foreach (var layer in _layers)
-        {
-            Logger.Debug<LayerStack>($"Initialize layer: {layer.Name}");
-            var ok = layer.Init(app);
-            Logger.Assert<LayerStack>(ok, $"Layer: {layer.Name} Initialize failed!.");
-        }
-
-        return true;
-    }
-
-    public void Update()
-    {
-        foreach (var layer in _layers)
-        {
-            layer.Update();
-        }
-    }
-
-    public bool Shutdown() 
-    {
-        foreach (var layer in _layers)
-        {
-            var ok = layer.Shutdown();
-            Logger.Assert<LayerStack>(ok, $"Layer: {layer.Name} Shutdown failed!.");
-        }
-
-        return true;
-    }
-
     public void OnEvent(Event e)
     {
         for (var i = _layers.Count - 1; i != 0; i--)
@@ -73,4 +41,10 @@ public class LayerStack : ILayerStack
                 break;
         }
     }
+
+    public IEnumerator<ILayer> GetEnumerator()
+        => _layers.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator()
+        => GetEnumerator();
 }

@@ -1,15 +1,11 @@
 ﻿using SharpStone.Events;
 
 namespace SharpStone.Core;
-public interface ILayerStack
+public interface ILayerStack : IEnumerable<ILayer>
 {
-    bool Init(Application app);
-    void Update();    
-    bool Shutdown();
     void OnEvent(Event e);
     void PushLayer(ILayer layer);
     void PopLayer(ILayer layer);
-
     void PushOverlay(ILayer layer);
     void PopOverlay(ILayer overlay);
 }

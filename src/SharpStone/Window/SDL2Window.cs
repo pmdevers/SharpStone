@@ -14,7 +14,7 @@ internal unsafe class SDL2Window : IWindow
     private nint _glContext;
     private EventCallback? _eventCallback;
 
-    public string Title { get; set; }
+    public string Title { get; set; } = nameof(SDL2Window);
 
     public int Width { get; set; }
 
@@ -27,8 +27,12 @@ internal unsafe class SDL2Window : IWindow
     {
         _eventCallback = eventCallback;
 
+#pragma warning disable CA1806 // Do not ignore method results
+
         SDL.Init(SDL_INIT_VIDEO);
+
         GL_SetAttribute(SDL_GLattr.SDL_GL_CONTEXT_FLAGS, (int)SDL_GLcontext.SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+
         GL_SetAttribute(SDL_GLattr.SDL_GL_CONTEXT_PROFILE_MASK, SDL_GLprofile.SDL_GL_CONTEXT_PROFILE_CORE);
         GL_SetAttribute(SDL_GLattr.SDL_GL_CONTEXT_MAJOR_VERSION, 3);
         GL_SetAttribute(SDL_GLattr.SDL_GL_CONTEXT_MINOR_VERSION, 2);
@@ -37,6 +41,7 @@ internal unsafe class SDL2Window : IWindow
         GL_SetAttribute(SDL_GLattr.SDL_GL_DEPTH_SIZE, 24);
         GL_SetAttribute(SDL_GLattr.SDL_GL_ALPHA_SIZE, 8);
         GL_SetAttribute(SDL_GLattr.SDL_GL_STENCIL_SIZE, 8);
+#pragma warning restore CA1806 // Do not ignore method results
 
         var flags = SDL_WindowFlags.SDL_WINDOW_OPENGL | SDL_WindowFlags.SDL_WINDOW_RESIZABLE;
         if (Fullscreen) flags |= SDL_WindowFlags.SDL_WINDOW_FULLSCREEN;

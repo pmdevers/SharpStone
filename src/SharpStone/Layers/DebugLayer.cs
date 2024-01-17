@@ -33,7 +33,7 @@ internal unsafe class DebugLayer : ILayer<DebugLayer>
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, sizeof(float) * 2, null);
 
-        var shader = CreatShader(vertShader, fragmentShader);
+        var shader = CreatShader(_vertShader, _fragmentShader);
         glUseProgram(shader);
 
         
@@ -47,8 +47,6 @@ internal unsafe class DebugLayer : ILayer<DebugLayer>
         glClear((uint)AttribMask.ColorBufferBit);
         
         glDrawArrays(PrimitiveType.Triangles, 0, 3);
-
-        var result = glGetError();
     }
 
 
@@ -93,7 +91,7 @@ internal unsafe class DebugLayer : ILayer<DebugLayer>
 
     }
 
-    private string vertShader = @"
+    private readonly string _vertShader = @"
 #version 330 core
 
 layout(location = 0) in vec4 position;
@@ -103,7 +101,7 @@ void main() {
 }
 ";
 
-    private string fragmentShader = @"
+    private readonly string _fragmentShader = @"
 
 #version 330 core
 
