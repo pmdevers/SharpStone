@@ -66,12 +66,7 @@ internal unsafe class SDL2Window : IWindow
         Logger.Info<SDL2Window>($"OpenGL Version: {sversion}.");
 
         LoadAllFunctions(GL_GetProcAddress);
-
-        var pCallback = Marshal.GetFunctionPointerForDelegate(DebugCallback);
-        glDebugMessageCallback(pCallback, nint.Zero);
-        glEnable(EnableCap.DebugOutput);
-        glEnable(EnableCap.DebugOutputSynchronous);
-
+        
         GL_SwapWindow(_window);
 
         return true;
@@ -92,21 +87,7 @@ internal unsafe class SDL2Window : IWindow
         GL_SwapWindow(_window);
     }
 
-    private static void DebugCallback(DebugSource source, DebugType type, uint id, DebugSeverity severity, int length, nint message, void* userParam)
-    {
-        var logLevel = severity switch
-        {
-            DebugSeverity.DebugSeverityNotification => LogLevel.Info,
-            DebugSeverity.DebugSeverityLow => LogLevel.Debug,
-            DebugSeverity.DebugSeverityMedium => LogLevel.Warning,
-            DebugSeverity.DebugSeverityHigh => LogLevel.Error,
-            _ => LogLevel.Fatal,
-        };
-
-        var msg = Marshal.PtrToStringAnsi(message, length);
-
-        Logger.Log<SDL2Window>(logLevel, $"{source} {type} - {new string(msg)}");
-    }
+    
 
     public bool Shutdown()
     {

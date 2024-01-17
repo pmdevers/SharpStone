@@ -28,7 +28,7 @@ public sealed class Application(IConfigurationManager config, IServiceRegistery 
 
     private bool OnWindowClosed(WindowCloseEvent @event)
     {
-        IsRunning = false;
+        Close();
         return true;
     }
 
@@ -49,5 +49,10 @@ public sealed class Application(IConfigurationManager config, IServiceRegistery 
         }
 
         services.Shutdown(this);
+    }
+
+    public void Close()
+    {
+        IsRunning = false;
     }
 }

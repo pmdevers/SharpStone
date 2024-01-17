@@ -82,7 +82,8 @@ public static unsafe partial class GL
     {
         fixed(void* pData = data)
         {
-            glBufferData(target, size, pData, usage);
+            var sizeOf = Marshal.SizeOf<T>();
+            glBufferData(target, data.Length * sizeOf * size, pData, usage);
         }
     }
 }

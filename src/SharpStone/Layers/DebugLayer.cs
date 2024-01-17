@@ -1,95 +1,58 @@
 ﻿using SharpStone.Core;
-using SharpStone.Platform.OpenGL;
-using System.Runtime.InteropServices;
-using static SharpStone.Platform.OpenGL.GL;
-using static SharpStone.Logging;
+using SharpStone.Renderer;
+using SharpStone.Maths;
 
 namespace SharpStone.Layers;
+
 internal unsafe class DebugLayer : ILayer<DebugLayer>
 {
     public string Name => "DebugLayer";
+
+    private IVertexArray vba;
 
     public static DebugLayer Create()
     {
         return new DebugLayer();
     }
 
-    public bool Init(Application app)
+    public bool Init(IRenderApi renderApi)
     {
         float[] positions = [
             -0.5f, -0.5f,
-             0.0f,  0.5f,
              0.5f, -0.5f,
+             0.5f,  0.5f,
+            -0.5f,  0.5f
         ];
 
-        var vba = glGenVertexArray();
+        uint[] indices = [
+            0, 1, 2,
+            2, 3, 0
+        ];
 
-        glBindVertexArray(vba);
+        vba = renderApi.CreateVertexArray();
+        var vertexBuffer = renderApi.CreateVertexBuffer(positions, 2);
+        var indexBuffer = renderApi.CreateIndexBuffer(indices, 1);
 
-        var buffer = glGenBuffer();
-        glBindBuffer(BufferTargetARB.ArrayBuffer, buffer);
-        glBufferData<float>(BufferTargetARB.ArrayBuffer, 6 * sizeof(float), positions, BufferUsageARB.StaticDraw);
+        vertexBuffer.Layout = new BufferLayout([ new BufferElement() {  Name = "Index", Type = ShaderDataType.Float, Size = sizeof(float) * 2, Offset = 0, Normalized = false }]);
 
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, sizeof(float) * 2, null);
+        vba.AddVertexBuffer(vertexBuffer);
+        vba.SetIndexBuffer(indexBuffer);
 
-        var shader = CreatShader(_vertShader, _fragmentShader);
-        glUseProgram(shader);
-
-        
+        var shader = renderApi.CreateShader("default", _vertShader, _fragmentShader);
+        shader.Bind();      
 
         return true;
     }
 
-    public void Update()
+    public void Update(IRenderApi renderApi)
     {
-        glClearColor(0f, 0f, 0f, 1f);
-        glClear((uint)AttribMask.ColorBufferBit);
+        renderApi.SetClearColor(Color.CornflowerBlue);
+        renderApi.Clear();
         
-        glDrawArrays(PrimitiveType.Triangles, 0, 3);
+        //renderApi.DrawArrays(vba, 3);
+        renderApi.DrawIndexed(vba);
     }
-
-
-    public static uint CompileShader(ShaderType type, string source)
-    {
-        var id = glCreateShader(type);
-        glShaderSource(id, source);
-        glCompileShader(id);
-
-        int result;
-        glGetShaderiv(id, ShaderParameterName.CompileStatus, &result);
-
-        if(result == 0)
-        {
-            int length;
-            glGetShaderiv(id, ShaderParameterName.InfoLogLength, &length);
-            var message = glGetShaderInfoLog(id, length);
-
-            Logger.Error<DebugLayer>(message);
-        }
-
-        return id;
-    }
-
-    public static uint CreatShader(string vertexShader, string fragmentShader)
-    {
-        uint program = glCreateProgram();
-
-        var vs = CompileShader(ShaderType.VertexShader, vertexShader);
-        var fs = CompileShader(ShaderType.FragmentShader, fragmentShader);
-
-        glAttachShader(program, vs);
-        glAttachShader(program, fs);
-
-        glLinkProgram(program);
-        glValidateProgram(program);
-
-        glDeleteShader(vs);
-        glDeleteShader(fs);
-
-        return program;
-
-    }
+         
 
     private readonly string _vertShader = @"
 #version 330 core

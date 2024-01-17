@@ -982,9 +982,10 @@ public static unsafe partial class GL
 	[UnmanagedFunctionPointer(CallConv)]
 	private delegate void glVertexAttribPointer_t(uint index, int size, VertexAttribPointerType type, bool normalized, int stride, void* pointer);
 	private static glVertexAttribPointer_t p_glVertexAttribPointer;
-	public static void glVertexAttribPointer(uint index, int size, VertexAttribPointerType type, bool normalized, int stride, void* pointer) => p_glVertexAttribPointer(index, size, type, normalized, stride, pointer);
+	public static void glVertexAttribPointer(uint index, int size, VertexAttribPointerType type, bool normalized, int stride, void* pointer)
+		=> p_glVertexAttribPointer(index, size, type, normalized, stride, pointer);
 
-	[UnmanagedFunctionPointer(CallConv)]
+    [UnmanagedFunctionPointer(CallConv)]
 	private delegate void glUniformMatrix2x3fv_t(int location, int count, bool transpose, float* value);
 	private static glUniformMatrix2x3fv_t p_glUniformMatrix2x3fv;
 	public static void glUniformMatrix2x3fv(int location, int count, bool transpose, float* value) => p_glUniformMatrix2x3fv(location, count, transpose, value);

@@ -1,16 +1,21 @@
 ﻿using SharpStone.Core;
 using SharpStone.Events;
+using SharpStone.Renderer;
 using static SharpStone.Logging;
 
 namespace SharpStone.Layers;
 internal class LayerService(ILayerStack layers) : IService
 {
+    private IRenderApi _renderApi;
+
     public bool Init(Application app)
     {
+        _renderApi = app.Services.GetService<IRenderApi>();
+
         foreach (var layer in layers)
         {
             Logger.Debug<LayerStack>($"Initialize layer: {layer.Name}");
-            var ok = layer.Init(app);
+            var ok = layer.Init(_renderApi);
             Logger.Assert<LayerStack>(ok, $"Layer: {layer.Name} Initialize failed!.");
         }
 
@@ -21,7 +26,7 @@ internal class LayerService(ILayerStack layers) : IService
     {
         foreach (var layer in layers)
         {
-            layer.Update();
+            layer.Update(_renderApi);
         }
     }
 

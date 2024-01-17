@@ -1,6 +1,8 @@
 ﻿using SharpStone.Configuration;
 using SharpStone.Core;
 using SharpStone.Layers;
+using SharpStone.Renderer;
+using SharpStone.Renderer.OpenGL;
 using SharpStone.Resources;
 using SharpStone.Services;
 using SharpStone.Window;
@@ -24,6 +26,7 @@ public static class IApplicationBuilderExtensions
 internal class ApplicationBuilder(object[] args) : IApplicationBuilder
 {
     private readonly IWindow _window = new SDL2Window();
+    private readonly IRenderApi _renderer = new OpenGLRenderer();
     private readonly LayerStack _layerStack = new();
     private readonly ResourceManager _resources = new();
     private readonly ConfigurationManager _config = new();
@@ -50,6 +53,7 @@ internal class ApplicationBuilder(object[] args) : IApplicationBuilder
     public Application Build()
     {
         AddService(new WindowService(_window));
+        AddService(_renderer);
         AddService(_resources);
         AddService(new LayerService(_layerStack));
         AddLayer(new DebugLayer());

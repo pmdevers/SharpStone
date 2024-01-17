@@ -1,4 +1,5 @@
 ﻿using SharpStone.Events;
+using SharpStone.Renderer;
 
 namespace SharpStone.Core;
 public interface ILayerStack : IEnumerable<ILayer>
@@ -20,9 +21,9 @@ public interface ILayer
 {
     public string Name { get; }
 
-    virtual bool Init(Application app) => true;
+    virtual bool Init(IRenderApi renderApi) => true;
     virtual bool Shutdown() => true;
-    virtual void Update() { }
+    virtual void Update(IRenderApi renderApi) { }
 
     virtual void OnEvent(Event @event) { }
 }
