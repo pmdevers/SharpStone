@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace SharpStone.Platform.OpenGL;
 
@@ -595,14 +596,14 @@ public static unsafe partial class GL
 	public static void glEnableVertexAttribArray(uint index) => p_glEnableVertexAttribArray(index);
 
 	[UnmanagedFunctionPointer(CallConv)]
-	private delegate void glGetActiveAttrib_t(uint program, uint index, int bufSize, int* length, int* size, uint* type, char* name);
+	private delegate void glGetActiveAttrib_t(uint program, uint index, int bufSize, int* length, int* size, uint* type, [In, Out] StringBuilder name);
 	private static glGetActiveAttrib_t p_glGetActiveAttrib;
-	public static void glGetActiveAttrib(uint program, uint index, int bufSize, int* length, int* size, uint* type, char* name) => p_glGetActiveAttrib(program, index, bufSize, length, size, type, name);
+	public static void glGetActiveAttrib(uint program, uint index, int bufSize, int* length, int* size, uint* type, [In, Out] StringBuilder name) => p_glGetActiveAttrib(program, index, bufSize, length, size, type, name);
 
 	[UnmanagedFunctionPointer(CallConv)]
-	private delegate void glGetActiveUniform_t(uint program, uint index, int bufSize, int* length, int* size, uint* type, char* name);
+	private delegate void glGetActiveUniform_t(uint program, uint index, int bufSize, int* length, int* size, uint* type, [In, Out] StringBuilder name);
 	private static glGetActiveUniform_t p_glGetActiveUniform;
-	public static void glGetActiveUniform(uint program, uint index, int bufSize, int* length, int* size, uint* type, char* name) => p_glGetActiveUniform(program, index, bufSize, length, size, type, name);
+	public static void glGetActiveUniform(uint program, uint index, int bufSize, int* length, int* size, uint* type, [In, Out] StringBuilder name) => p_glGetActiveUniform(program, index, bufSize, length, size, type, name);
 
 	[UnmanagedFunctionPointer(CallConv)]
 	private delegate void glGetAttachedShaders_t(uint program, int maxCount, int* count, uint* shaders);
@@ -640,9 +641,9 @@ public static unsafe partial class GL
 	public static void glGetShaderSource(uint shader, int bufSize, int* length, char* source) => p_glGetShaderSource(shader, bufSize, length, source);
 
 	[UnmanagedFunctionPointer(CallConv)]
-	private delegate int glGetUniformLocation_t(uint program, char* name);
+	private delegate int glGetUniformLocation_t(uint program, string name);
 	private static glGetUniformLocation_t p_glGetUniformLocation;
-	public static int glGetUniformLocation(uint program, char* name) => p_glGetUniformLocation(program, name);
+	public static int glGetUniformLocation(uint program, string name) => p_glGetUniformLocation(program, name);
 
 	[UnmanagedFunctionPointer(CallConv)]
 	private delegate void glGetUniformfv_t(uint program, int location, float* @params);
@@ -980,9 +981,9 @@ public static unsafe partial class GL
 	public static void glVertexAttrib4usv(uint index, short* v) => p_glVertexAttrib4usv(index, v);
 
 	[UnmanagedFunctionPointer(CallConv)]
-	private delegate void glVertexAttribPointer_t(uint index, int size, VertexAttribPointerType type, bool normalized, int stride, void* pointer);
+	private delegate void glVertexAttribPointer_t(uint index, int size, VertexAttribPointerType type, bool normalized, int stride, int pointer);
 	private static glVertexAttribPointer_t p_glVertexAttribPointer;
-	public static void glVertexAttribPointer(uint index, int size, VertexAttribPointerType type, bool normalized, int stride, void* pointer)
+	public static void glVertexAttribPointer(uint index, int size, VertexAttribPointerType type, bool normalized, int stride, int pointer)
 		=> p_glVertexAttribPointer(index, size, type, normalized, stride, pointer);
 
     [UnmanagedFunctionPointer(CallConv)]
@@ -1091,9 +1092,9 @@ public static unsafe partial class GL
 	public static void glEndConditionalRender() => p_glEndConditionalRender();
 
 	[UnmanagedFunctionPointer(CallConv)]
-	private delegate void glVertexAttribIPointer_t(uint index, int size, VertexAttribPointerType type, int stride, void* pointer);
+	private delegate void glVertexAttribIPointer_t(uint index, int size, VertexAttribPointerType type, int stride, int pointer);
 	private static glVertexAttribIPointer_t p_glVertexAttribIPointer;
-	public static void glVertexAttribIPointer(uint index, int size, VertexAttribPointerType type, int stride, void* pointer) => p_glVertexAttribIPointer(index, size, type, stride, pointer);
+	public static void glVertexAttribIPointer(uint index, int size, VertexAttribPointerType type, int stride, int pointer) => p_glVertexAttribIPointer(index, size, type, stride, pointer);
 
 	[UnmanagedFunctionPointer(CallConv)]
 	private delegate void glGetVertexAttribIiv_t(uint index, VertexAttribEnum pname, int* @params);

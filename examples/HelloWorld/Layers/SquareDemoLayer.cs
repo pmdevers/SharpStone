@@ -3,9 +3,8 @@ using SharpStone.Maths;
 using SharpStone.Rendering;
 using static SharpStone.Application;
 
-namespace SharpStone.Layers;
-
-internal unsafe class DebugLayer : Layer
+namespace HelloWorld.Layers;
+internal class SquareDemoLayer : Layer
 {
     private IVertexArray _vba;
     private IShader _shader;
@@ -13,25 +12,29 @@ internal unsafe class DebugLayer : Layer
     float r = 0.1f;
     float increment = 1f;
 
-    public DebugLayer() : base("DebugLayer")
+    public SquareDemoLayer() : base("Square Deme Layer")
     {
-        float[] positions = [
-            -0.5f, -0.5f,
-             0.5f, -0.5f,
-             0.5f,  0.5f,
-            -0.5f,  0.5f
+        Vector2[] positions = [
+            new(-0.5f, -0.5f),
+            new(0.5f,  -0.5f),
+            new(0.5f,   0.5f),
+            new(-0.5f,  0.5f)
         ];
 
         uint[] indices = [
-            0, 1, 2,
-            2, 3, 0
+            0,
+            1,
+            2,
+            2,
+            3,
+            0
         ];
 
         _vba = Renderer.Factory.CreateVertexArray();
         var vertexBuffer = Renderer.Factory.CreateVertexBuffer(positions);
         var indexBuffer = Renderer.Factory.CreateIndexBuffer(indices);
 
-        vertexBuffer.Layout.Add("Index", ShaderDataType.Float);
+        vertexBuffer.Layout.Add("Index", ShaderDataType.Float2);
 
         _vba.AddVertexBuffer(vertexBuffer);
         _vba.SetIndexBuffer(indexBuffer);
@@ -42,7 +45,7 @@ internal unsafe class DebugLayer : Layer
 
     public override void OnUpdate(float v)
     {
-        Renderer.Commands.SetViewPort(0, 0, Application.Window.Width, Application.Window.Height);
+        Renderer.Commands.SetViewPort(0, 0, Window.Width, Window.Height);
         Renderer.Commands.SetClearColor(Color.CornflowerBlue);
         Renderer.Commands.Clear();
 

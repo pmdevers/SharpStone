@@ -1,13 +1,19 @@
 ﻿using SharpStone.Core;
+using SharpStone.Rendering;
+using static SharpStone.Application;
 
 namespace HelloWorld.Layers;
 
-internal class MainLayer : ILayer<MainLayer>
+internal class MainLayer : Layer
 {
-    public string Name => "Sandbox Main Layer";
+    private IVertexArray _vertexArray;
 
-    public static MainLayer Create()
+    public MainLayer() : base("Sandbox Main Layer")
     {
-        return new MainLayer();
+        _vertexArray = Renderer.Factory.CreateVertexArray();
+    }
+
+    public override void OnUpdate(float v)
+    {
     }
 }

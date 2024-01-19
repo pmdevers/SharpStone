@@ -1,7 +1,7 @@
-﻿using SharpStone.Renderer;
+﻿using SharpStone.Resources;
 
 namespace SharpStone.Core;
-public interface IResourceManager : IService
+public interface IResourceManager
 {
-    public IShader GetShader(string name);
+    public ShaderProgramSource GetShaderSource(string name);
 }

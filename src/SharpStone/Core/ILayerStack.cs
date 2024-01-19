@@ -1,29 +1,22 @@
 ﻿using SharpStone.Events;
-using SharpStone.Renderer;
 
 namespace SharpStone.Core;
-public interface ILayerStack : IEnumerable<ILayer>
+public interface ILayerStack : IEnumerable<Layer>
 {
     void OnEvent(Event e);
-    void PushLayer(ILayer layer);
-    void PopLayer(ILayer layer);
-    void PushOverlay(ILayer layer);
-    void PopOverlay(ILayer overlay);
+    void PushLayer(Layer layer);
+    void PopLayer(Layer layer);
+    void PushOverlay(Layer layer);
+    void PopOverlay(Layer overlay);
 }
 
-public interface ILayer<TSelf> : ILayer
-    where TSelf : ILayer
+public abstract class Layer(string name)
 {
-    static abstract TSelf Create();
-}
+    public string Name { get; } = name;
+    public virtual void OnEvent(Event @event) { }
+    public abstract void OnUpdate(float v);
+    public virtual void OnAttach() { }
+    public virtual void OnDetach() { }
 
-public interface ILayer
-{
-    public string Name { get; }
-
-    virtual bool Init(IRenderApi renderApi) => true;
-    virtual bool Shutdown() => true;
-    virtual void Update(IRenderApi renderApi) { }
-
-    virtual void OnEvent(Event @event) { }
+    public virtual void OnGuiRender() { }
 }

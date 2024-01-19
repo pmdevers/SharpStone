@@ -1,11 +1,26 @@
 ﻿using System.Runtime.InteropServices;
 
 namespace SharpStone;
-public class PlatformResolver
+internal enum OperatingSystem
 {
-    public static bool IsWindows() => IsPlatform(OSPlatform.Windows);
-    public static bool IsLinux() => IsPlatform(OSPlatform.Linux);
-    public static bool IsOsx() => IsPlatform(OSPlatform.OSX);
-    public static bool IsFreeBsd() => IsPlatform(OSPlatform.FreeBSD);
-    public static bool IsPlatform(OSPlatform osPlatform) => RuntimeInformation.IsOSPlatform(osPlatform);
+    Windows,
+    MacOs,
+    Linux
+}
+
+internal static class GlobalConfiguration
+{
+    public static readonly OperatingSystem Os = GetOperatingSystem();
+    private static OperatingSystem GetOperatingSystem()
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return OperatingSystem.Windows;
+        }
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            return OperatingSystem.MacOs;
+        }
+        return OperatingSystem.Linux;
+    }
 }

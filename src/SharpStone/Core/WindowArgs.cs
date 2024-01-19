@@ -1,10 +1,10 @@
 ﻿namespace SharpStone.Core;
 
-public struct WindowArgs
+public struct WindowArgs(string title)
 {
-    public string Title { get; set; }
-    public int Width { get; set; }
-    public int Height { get; set; }
-    public bool Resizable { get; set; }
-    public bool AlwaysOnTop { get; set; }
+    public string Title { get; set; } = title;
+    public int Width { get; set; } = 1280;
+    public int Height { get; set; } = 720;
+    public bool Resizable { get; set; } = false;
+    public bool AlwaysOnTop { get; set; } = false;
 }

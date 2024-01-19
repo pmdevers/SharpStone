@@ -6,6 +6,7 @@ using static SharpStone.Logging;
 using static SharpStone.Platform.SDL2.SDL;
 using System.Runtime.InteropServices;
 using SharpStone.Events;
+using static SharpStone.Application;
 
 namespace SharpStone.Window;
 internal unsafe class SDL2Window : IWindow
@@ -23,9 +24,8 @@ internal unsafe class SDL2Window : IWindow
     public bool Fullscreen { get; set; }
     public bool HighDpi { get; set; }
 
-    public bool Init(WindowArgs args, EventCallback eventCallback)
+    public bool Init(WindowArgs args)
     {
-        _eventCallback = eventCallback;
 
 #pragma warning disable CA1806 // Do not ignore method results
 
@@ -59,6 +59,9 @@ internal unsafe class SDL2Window : IWindow
         _glContext = GL_CreateContext(_window);
         Logger.Assert<SDL2Window>(_glContext != IntPtr.Zero, "Could not create context!");
 
+        Width = args.Width;
+        Height = args.Height;
+
         LoadGetString(GL_GetProcAddress);
         
         var version = glGetString(StringName.Version);
@@ -79,9 +82,19 @@ internal unsafe class SDL2Window : IWindow
             switch (e.type)
             {
                 case SDL_EventType.SDL_QUIT:
-                    _eventCallback?.Invoke(new WindowCloseEvent());
+                    Instance.OnEvent(new WindowCloseEvent());
                     break;
-
+                case SDL_EventType.SDL_WINDOWEVENT:
+                    switch (e.window.windowEvent)
+                    {
+                        case SDL_WindowEventID.SDL_WINDOWEVENT_RESIZED:
+                        case SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED:
+                            Instance.OnEvent(new WindowResizedEvent(e.window.data1, e.window.data2));
+                            break;
+                        default
+                            : break;
+                    }
+                    break;
             }
         }
         GL_SwapWindow(_window);

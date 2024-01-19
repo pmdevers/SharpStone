@@ -1,10 +1,21 @@
-﻿using System;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 
 namespace SharpStone.Platform.OpenGL;
 public static unsafe partial class GL
 {
+
+    public static unsafe bool glGetBoolean(GetPName pName)
+    {
+        bool[] ret = new bool[1];
+        fixed(bool* ptr = ret)
+        {
+            glGetBooleanv(pName, ptr);
+        }
+        return ret[0];
+    }
+
     public static unsafe uint glGenBuffer()
     {
         uint[] ret = new uint[1];
@@ -76,14 +87,23 @@ public static unsafe partial class GL
         return Encoding.UTF8.GetString(buffer);
     }
 
-
-    public static void glBufferData<T>(BufferTargetARB target, int size, [In, Out] T[] data, BufferUsageARB usage)
+    public static void glBufferData<T>(BufferTargetARB target, [In, Out] T[] data, BufferUsageARB usage)
             where T : struct
     {
-        fixed(void* pData = data)
+        fixed (void* pData = data)
         {
-            var sizeOf = Marshal.SizeOf<T>();
-            glBufferData(target, data.Length * sizeOf * size, pData, usage);
+            var sizeOf = Marshal.SizeOf(typeof(T)) * data.Length;
+            glBufferData(target, sizeOf, pData, usage);
+        }
+    }
+
+    public static void glBufferSubData<T>(BufferTargetARB target, [In, Out] T[] data)
+            where T : struct
+    {
+        fixed (void* pData = data)
+        {
+            var sizeOf = Marshal.SizeOf(typeof(T)) * data.Length;
+            glBufferSubData(target, 0, sizeOf, pData);
         }
     }
 }

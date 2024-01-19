@@ -9,7 +9,7 @@ public interface IWindow
     int Height { get; }
     bool Fullscreen { get; }
 
-    bool Init(WindowArgs args, EventCallback eventCallback);
+    bool Init(WindowArgs args);
     bool Shutdown();
     void Update();
 }
