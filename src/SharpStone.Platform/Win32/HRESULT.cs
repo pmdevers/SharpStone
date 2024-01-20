@@ -10,7 +10,7 @@ public struct HRESULT
     public int Value;
     [FieldOffset(0)]
     public uint UnsignedValue;
-    public override string ToString() => $"0x{Value:X}";
+    public override readonly string ToString() => $"0x{Value:X}";
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static implicit operator int(HRESULT hresult) => hresult.Value;

@@ -1,13 +1,14 @@
 ﻿using SharpStone.Core;
 using SharpStone.Maths;
 using SharpStone.Rendering;
+using System.Numerics;
 using static SharpStone.Application;
 
 namespace HelloWorld.Layers;
 internal class SquareDemoLayer : Layer
 {
-    private IVertexArray _vba;
-    private IShader _shader;
+    private readonly IVertexArray _vba;
+    private readonly IShader _shader;
 
     float r = 0.1f;
     float increment = 1f;

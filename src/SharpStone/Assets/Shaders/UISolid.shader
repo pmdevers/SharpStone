@@ -6,8 +6,10 @@ layout(location = 1) in vec4 in_color;
 
 out vec4 vColor;
 
+uniform mat4 u_Matrix;
+
 void main() {
-    gl_Position = in_position;
+    gl_Position = u_Matrix * in_position; //projection * view * in_position;
     vColor = in_color;
 }
 

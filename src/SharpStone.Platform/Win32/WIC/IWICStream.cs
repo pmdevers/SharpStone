@@ -4,7 +4,7 @@ namespace SharpStone.Platform.Win32.WIC;
 
 public unsafe struct IStream
 {
-    private void** _vtbl;
+    private readonly void** _vtbl;
 }
 public unsafe struct IWICStream
 {

@@ -20,53 +20,59 @@ public struct ApplicationConfig()
 
 public class Application
 {
-    public static Application Instance;
-
+    private static Application? _instance;
+    public static Application Instance => _instance ?? throw new InvalidOperationException();
     public static IWindow Window => Instance._window;
     public static IRenderApi Renderer => Instance._renderApi;
     public static IConfigurationManager Config => Instance._config;
     public static IResourceManager ResourcesManager => Instance._resources;
+    public static IUserInterface UI => Instance._userInterface;
     
-    private IWindow _window;
-    private IRenderApi _renderApi;
-    private IConfigurationManager _config;
-    private IResourceManager _resources;
-    private ILayerStack _layers;
-    private GuiLayer _gui_layer;
+    private readonly IWindow _window;
+    private readonly IRenderApi _renderApi;
+    private readonly IConfigurationManager _config;
+    private readonly IResourceManager _resources;
+    private readonly ILayerStack _layers;
+    private readonly IUserInterface _userInterface;
 
+    public static RenderApi Api => RenderApi.OpenGL;
     public bool IsRunning { get; private set; }
     public bool IsMinimized { get; private set; }
+    
+    public static Application Create(Action<ApplicationConfig> config)
+    {
+        var cfg = new ApplicationConfig();
+        config(cfg);
+        return new(cfg);
+    }
 
     public Application(ApplicationConfig applicationConfig)
     {
-        Logger.Assert<Application>(Instance == null, "Application was already running.");
+        Logger.Assert<Application>(_instance == null, "Application was already running.");
         
-        Instance = this;
-        
+        _instance = this;
         _window = WindowService.Create(new WindowArgs(applicationConfig.Name));
         _renderApi = RenderService.Create(applicationConfig.RenderApi);
         _config = new ConfigurationManager();
         _resources = new ResourceManager(applicationConfig.AssetsAssembly);
         _layers = new LayerStack();
+        _userInterface = UserInterface.Create();
 
-        //_layers.PushLayer(new DebugLayer());
-
-        //_gui_layer = new GuiLayer();
-        //_layers.PushOverlay(_gui_layer);
-
-        //Renderer.Renderer2D.Init();
+        _renderApi.Renderer2D.Init();
     }
 
-    public void PushLayer(Layer layer)
+    public Application PushLayer(Layer layer)
     {
         _layers.PushLayer(layer);
         layer.OnAttach();
+        return this;
     }
 
-    public void PushOverlay(Layer layer)
+    public Application PushOverlay(Layer layer)
     {
         _layers.PushOverlay(layer);
         layer.OnAttach();
+        return this;
     }
 
     public void OnEvent(Event e)
@@ -110,13 +116,12 @@ public class Application
                 layer.OnUpdate(0f);
             }
 
-            //_gui_layer.Begin();
-            //foreach (var layer in _layers)
-            //    layer.OnGuiRender();
-            //_gui_layer.End();
-
+            _userInterface.Update();
             _window.Update();
         }
+
+        _renderApi.Renderer2D.Shutdown();
+        _window.Shutdown();
     }
 
     public void Close()

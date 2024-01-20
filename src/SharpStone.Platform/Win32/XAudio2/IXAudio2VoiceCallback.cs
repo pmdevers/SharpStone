@@ -58,32 +58,32 @@ internal unsafe struct IXAudio2VoiceCallbackContext
             => ((T*)context)->OnVoiceError(pBufferContext, error);
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void OnVoicePocessingPassStart(uint bytesRequired)
+    public readonly void OnVoicePocessingPassStart(uint bytesRequired)
         => _onVoicePocessingPassStart(_context, bytesRequired);
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void OnVoiceProcessingPassEnd()
+    public readonly void OnVoiceProcessingPassEnd()
         => _onVoiceProcessingPassEnd(_context);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void OnStreamEnd()
+    public readonly void OnStreamEnd()
         => _onStreamEnd(_context);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void OnBufferStart(void* pBufferContext)
+    public readonly void OnBufferStart(void* pBufferContext)
         => _onBufferStart(_context, pBufferContext);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void OnBufferEnd(void* pBufferContext)
+    public readonly void OnBufferEnd(void* pBufferContext)
         => _onBufferEnd(_context, pBufferContext);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void OnLoopEnd(void* pBufferContext)
+    public readonly void OnLoopEnd(void* pBufferContext)
         => _onLoopEnd(_context, pBufferContext);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void OnVoiceError(void* pBufferContext, HRESULT error)
+    public readonly void OnVoiceError(void* pBufferContext, HRESULT error)
         => _onVoiceError(_context, pBufferContext, error);
 }
 

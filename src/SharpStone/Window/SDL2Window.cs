@@ -13,7 +13,7 @@ internal unsafe class SDL2Window : IWindow
 {
     private nint _window;
     private nint _glContext;
-    private EventCallback? _eventCallback;
+    private readonly EventCallback? _eventCallback;
 
     public string Title { get; set; } = nameof(SDL2Window);
 

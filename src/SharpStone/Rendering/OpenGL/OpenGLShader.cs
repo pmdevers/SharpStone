@@ -3,12 +3,9 @@ using SharpStone.Platform.OpenGL;
 
 using static SharpStone.Platform.OpenGL.GL;
 using static SharpStone.Logging;
-using SharpStone.Maths;
-using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Text;
-using static System.Net.Mime.MediaTypeNames;
-using System.Xml.Linq;
+using System.Numerics;
+using SharpStone.Maths;
 
 
 namespace SharpStone.Rendering.OpenGL;
@@ -102,10 +99,12 @@ internal unsafe class OpenGLShader : IShader
         }
     }
 
-    public unsafe void SetMatrix4(string name, Matrix4 value)
+    public unsafe void SetMatrix4(string name, Matrix4x4 value)
     {
-        int location = GetUniformedLocation(name);
-        // Gl.UniformMat4(location, 1, false, (float*)&value);
+        fixed(float* pValues = value.ToFloats().ToArray())
+        {
+            glUniformMatrix4fv(GetUniformedLocation(name), 1, false, pValues);
+        }
     }
 
     public void Unbind()
@@ -128,7 +127,7 @@ internal unsafe class OpenGLShader : IShader
         }
     }
 
-    private Dictionary<string, int> _locationCache = [];
+    private readonly Dictionary<string, int> _locationCache = [];
     private int GetUniformedLocation(string name)
     {
         if(_locationCache.ContainsKey(name)) { 

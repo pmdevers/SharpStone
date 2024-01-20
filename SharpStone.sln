@@ -13,9 +13,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{4DD2C02A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpStone", "src\SharpStone\SharpStone.csproj", "{9E409109-B185-4096-A726-476B37816165}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld", "examples\HelloWorld\HelloWorld.csproj", "{2E0ACF72-3329-47A2-9BAA-FCC1065D20DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloWorld", "examples\HelloWorld\HelloWorld.csproj", "{2E0ACF72-3329-47A2-9BAA-FCC1065D20DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpStone.Platform", "src\SharpStone.Platform\SharpStone.Platform.csproj", "{E3746A42-F19F-45F5-8C16-63FE5D325307}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpStone.Platform", "src\SharpStone.Platform\SharpStone.Platform.csproj", "{E3746A42-F19F-45F5-8C16-63FE5D325307}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpStone.Tests", "tests\SharpStone.Tests\SharpStone.Tests.csproj", "{AC87D2B0-31C9-4A8E-B531-B34449036940}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{E3746A42-F19F-45F5-8C16-63FE5D325307}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3746A42-F19F-45F5-8C16-63FE5D325307}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3746A42-F19F-45F5-8C16-63FE5D325307}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC87D2B0-31C9-4A8E-B531-B34449036940}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC87D2B0-31C9-4A8E-B531-B34449036940}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC87D2B0-31C9-4A8E-B531-B34449036940}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC87D2B0-31C9-4A8E-B531-B34449036940}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -43,6 +49,7 @@ Global
 		{9E409109-B185-4096-A726-476B37816165} = {B0643AEE-43C9-42F5-82D3-A082566C2F79}
 		{2E0ACF72-3329-47A2-9BAA-FCC1065D20DF} = {3FE5510A-39FD-458D-8BAC-CE946731425E}
 		{E3746A42-F19F-45F5-8C16-63FE5D325307} = {B0643AEE-43C9-42F5-82D3-A082566C2F79}
+		{AC87D2B0-31C9-4A8E-B531-B34449036940} = {DD0362AD-C2B9-4C3C-B860-603D573A7365}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FE7A881D-36AE-42DB-9D8F-4FF102F33C6A}

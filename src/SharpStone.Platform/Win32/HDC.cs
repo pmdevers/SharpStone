@@ -17,8 +17,8 @@ public struct HDC
     public static implicit operator HDC(nint hdc) => new() { Value = hdc };
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static implicit operator HDC(nuint hdc) => new() { Value = (nint)hdc };
-    public bool IsValid => Value != 0;
+    public readonly bool IsValid => Value != 0;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public override string ToString() => Value.ToString();
+    public override readonly string ToString() => Value.ToString();
 }

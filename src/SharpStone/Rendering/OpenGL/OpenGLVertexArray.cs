@@ -6,10 +6,10 @@ using SharpStone.Core;
 namespace SharpStone.Rendering.OpenGL;
 internal unsafe class OpenGLVertexArray : IVertexArray
 {
-    private uint _vba;
+    private readonly uint _vba;
 
     private IIndexBuffer? _indexBuffer;
-    private List<IVertexBuffer> _buffers = [];
+    private readonly List<IVertexBuffer> _buffers = [];
 
     public OpenGLVertexArray()
     {

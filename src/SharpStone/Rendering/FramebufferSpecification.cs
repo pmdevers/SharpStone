@@ -2,9 +2,9 @@
 
 public struct FramebufferSpecification()
 {
-    uint Width = 0;
-    uint Height = 0;
-    FramebufferAttachmentSpecification Attachments;
-    uint Samples = 1;
-    bool SwapChainTarget = false;
+    readonly uint Width = 0;
+    readonly uint Height = 0;
+    readonly FramebufferAttachmentSpecification Attachments;
+    readonly uint Samples = 1;
+    readonly bool SwapChainTarget = false;
 }

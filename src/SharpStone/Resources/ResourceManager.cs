@@ -49,7 +49,7 @@ internal class ResourceManager(Assembly assembly) : IResourceManager
     public bool Shutdown(Application app) => true;
     public void Update() { }
 
-    private Dictionary<ResourceType, string> extensions = new()
+    private readonly Dictionary<ResourceType, string> extensions = new()
     {
         { ResourceType.Shaders, "shader" },
     };

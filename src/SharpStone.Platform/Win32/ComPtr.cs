@@ -7,7 +7,7 @@ namespace SharpStone.Platform.Win32;
 public unsafe struct ComPtr<T> : IDisposable where T : unmanaged, INativeGuid
 {
     private T* _ptr;
-    public Guid* UUID => T.Guid;
+    public readonly Guid* UUID => T.Guid;
     public ComPtr(T* ptr)
     {
         _ptr = ptr;
@@ -32,7 +32,7 @@ public unsafe struct ComPtr<T> : IDisposable where T : unmanaged, INativeGuid
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void InternalAddRef()
+    private readonly void InternalAddRef()
     {
         Debug.Assert(_ptr != null);
         ((IUnknown*)_ptr)->AddRef();

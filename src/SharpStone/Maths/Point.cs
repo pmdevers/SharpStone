@@ -20,7 +20,7 @@ public struct Point(int x, int y)
     #endregion
 
     #region Methods
-    public override string ToString()
+    public override readonly string ToString()
     {
         return X + "," + Y;
     }
@@ -35,7 +35,7 @@ public struct Point(int x, int y)
         return new Point((a.X < b.X) ? b.X : a.X, (a.Y < b.Y) ? b.Y : a.Y);
     }
 
-    public bool IsWithin(Point Position, Point Size)
+    public readonly bool IsWithin(Point Position, Point Size)
     {
         return !(X < Position.X || Y < Position.Y || X > Position.X + Size.X || Y > Position.Y + Size.Y);
     }

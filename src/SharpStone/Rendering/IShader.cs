@@ -1,4 +1,5 @@
 ﻿using SharpStone.Maths;
+using System.Numerics;
 
 namespace SharpStone.Rendering;
 public interface IShader
@@ -15,6 +16,6 @@ public interface IShader
     void SetFloat3(string name, Vector3 value);
     void SetFloat4(string name, Vector4 value);
     
-    void SetMatrix4(string name, Matrix4 value);
+    void SetMatrix4(string name, Matrix4x4 value);
 
 }

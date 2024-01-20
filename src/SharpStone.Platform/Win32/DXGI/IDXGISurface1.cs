@@ -71,5 +71,5 @@ public unsafe struct IDXGISurface1
 
 public unsafe struct HDC
 {
-    private void* _ptr;
+    private readonly void* _ptr;
 }

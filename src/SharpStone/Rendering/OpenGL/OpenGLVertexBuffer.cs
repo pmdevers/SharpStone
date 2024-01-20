@@ -7,7 +7,7 @@ namespace SharpStone.Rendering.OpenGL;
 internal unsafe class OpenGLVertexBuffer<T> : IVertexBuffer<T>
     where T : struct
 {
-    private uint _vbo;
+    private readonly uint _vbo;
     private int _size;
     private T[]? _data;
 

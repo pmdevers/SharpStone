@@ -1,5 +1,9 @@
-﻿using HelloWorld;
+﻿using HelloWorld.Layers;
+using SharpStone;
 
-var app = HelloWorldApp.Create(args);
-
-app.Run();
+Application.Create(c =>
+{
+    c.Name = "Hello World";
+})
+.PushLayer(new SquareDemoLayer())
+.Run();

@@ -7,8 +7,8 @@ namespace SharpStone.Layers;
 
 internal unsafe class DebugLayer : Layer
 {
-    private IVertexArray _vba;
-    private IShader _shader;
+    private readonly IVertexArray _vba;
+    private readonly IShader _shader;
 
     float r = 0.1f;
     float increment = 1f;

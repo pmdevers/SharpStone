@@ -17,8 +17,8 @@ public struct HGLRC
     public static implicit operator HGLRC(nint hglrc) => new() { Value = hglrc };
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static implicit operator HGLRC(nuint hglrc) => new() { Value = (nint)hglrc };
-    public bool IsValid => Value != 0;
+    public readonly bool IsValid => Value != 0;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public override string ToString() => Value.ToString();
+    public override readonly string ToString() => Value.ToString();
 }

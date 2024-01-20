@@ -3,7 +3,7 @@ namespace SharpStone.Platform.Win32.WIC;
 
 public unsafe struct IWICBitmapSource
 {
-    private void** _vtbl;
+    private readonly void** _vtbl;
     //    HRESULT(STDMETHODCALLTYPE* QueryInterface)(
     //__RPC__in IWICBitmapSource * This,
     ///* [in] */ __RPC__in REFIID riid,

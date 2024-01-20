@@ -12,7 +12,7 @@ internal unsafe class OpenGLRenderer : IRenderApi, IRenderFactory, IRenderComman
 {
     public IRenderCommands Commands => this;
     public IRenderFactory Factory => this;
-    public IRenderer2D Renderer2D => new OpenGLRenderer2D();
+    public IRenderer2D Renderer2D { get; } = new OpenGLRenderer2D();
 
     public void Clear()
     {

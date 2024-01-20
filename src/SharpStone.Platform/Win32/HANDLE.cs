@@ -19,5 +19,5 @@ public struct HANDLE
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static implicit operator HANDLE(nint handle) => new() { Value = (nuint)handle };
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool IsValid() => Value != unchecked(0x0000000000000000);
+    public readonly bool IsValid() => Value != unchecked(0x0000000000000000);
 }

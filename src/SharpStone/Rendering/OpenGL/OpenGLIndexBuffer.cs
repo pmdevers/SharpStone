@@ -9,7 +9,7 @@ internal unsafe class OpenGLIndexBuffer : IIndexBuffer
     private readonly uint[] _indeces;
 
     private uint _id;
-    private int _size;
+    private readonly int _size;
     public int Count => _indeces.Length;
 
     public OpenGLIndexBuffer(uint[] indeces)

@@ -25,7 +25,7 @@ public enum ShaderDataType
 public class BufferLayout : IEnumerable<BufferElement>
 {
     private int _stride = 0;
-    private List<BufferElement> _elements = [];
+    private readonly List<BufferElement> _elements = [];
 
     public BufferLayout()
     {
@@ -63,10 +63,10 @@ public struct BufferElement(ShaderDataType type, string name, bool normalized = 
     public string Name = name;
     public ShaderDataType Type = type;
     public int Offset { get; set; }
-    public int Size => ShaderDataTypeSize(Type);
+    public readonly int Size => ShaderDataTypeSize(Type);
     public bool Normalized = normalized;
     
-    public int GetComponentCount() 
+    public readonly int GetComponentCount() 
 		{
 			switch (Type)
 			{
