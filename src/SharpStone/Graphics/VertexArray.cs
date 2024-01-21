@@ -3,41 +3,45 @@ using static SharpStone.Platform.OpenGL.GL;
 using static SharpStone.Logging;
 using SharpStone.Core;
 
-namespace SharpStone.Rendering.OpenGL;
-internal unsafe class OpenGLVertexArray : IVertexArray
+namespace SharpStone.Graphics;
+
+public unsafe class VertexArray
 {
     private readonly uint _vba;
 
-    private IIndexBuffer? _indexBuffer;
-    private readonly List<IVertexBuffer> _buffers = [];
+    private IndexBuffer? _indexBuffer;
+    private readonly List<VertexBuffer> _buffers = [];
 
-    public OpenGLVertexArray()
+    public static VertexArray Create() 
+        => new();
+
+    private VertexArray()
     {
         _vba = glGenVertexArray();
     }
 
-    public IIndexBuffer? GetIndexBuffer() => _indexBuffer;
+    public IndexBuffer? GetIndexBuffer() => _indexBuffer;
 
-    public void SetIndexBuffer(IIndexBuffer indexBuffer)
-    { 
+    public void SetIndexBuffer(IndexBuffer indexBuffer)
+    {
         glBindVertexArray(_vba);
         indexBuffer.Bind();
         _indexBuffer = indexBuffer;
     }
 
-    public void AddVertexBuffer(IVertexBuffer vertextBuffer)
+    public void AddVertexBuffer(VertexBuffer vertextBuffer)
     {
         glBindVertexArray(_vba);
         vertextBuffer.Bind();
 
         vertextBuffer.Layout.CalculateOffsetAndStride();
 
-        var stride  = vertextBuffer.Layout.Stride;
+        var stride = vertextBuffer.Layout.Stride;
 
-        uint index = 0; 
-        foreach (var element in vertextBuffer.Layout)
+        uint index = 0;
+        foreach (var element in vertextBuffer.Layout.Elements)
         {
-            switch(element.Type)
+            switch (element.Type)
             {
                 case ShaderDataType.Float:
                 case ShaderDataType.Float2:
@@ -47,10 +51,10 @@ internal unsafe class OpenGLVertexArray : IVertexArray
                         glEnableVertexAttribArray(index); //((uint)_buffers.Count); 
                         glVertexAttribPointer(
                             index, // (uint)_buffers.Count, 
-                            element.GetComponentCount(), 
+                            element.GetComponentCount(),
                             ShaderDataTypeToOpenGLBaseType(element.Type),
                             element.Normalized,
-                            stride, 
+                            stride,
                             element.Offset);
                         break;
                     }
@@ -90,7 +94,7 @@ internal unsafe class OpenGLVertexArray : IVertexArray
                         break;
                     }
                 default:
-                    Logger.Assert<OpenGLVertexArray>(false, "Unknown ShaderDataType!");
+                    Logger.Assert<VertexArray>(false, "Unknown ShaderDataType!");
                     break;
             }
             index++;
@@ -110,10 +114,10 @@ internal unsafe class OpenGLVertexArray : IVertexArray
 
     public void Dispose()
     {
-        
+
     }
 
-    public IVertexBuffer[] GetVertextBuffers()
+    public VertexBuffer[] GetVertextBuffers()
         => _buffers.ToArray();
     public void Unbind()
     {
@@ -135,10 +139,10 @@ internal unsafe class OpenGLVertexArray : IVertexArray
             case ShaderDataType.Int3:
             case ShaderDataType.Int4:
                 return VertexAttribPointerType.Int;
-            case ShaderDataType.Bool: 
+            case ShaderDataType.Bool:
                 return VertexAttribPointerType.Byte;
             default:
-                Logger.Error<OpenGLVertexArray>("Unknown ShaderDataType!");
+                Logger.Error<VertexArray>("Unknown ShaderDataType!");
                 return 0;
         }
     }

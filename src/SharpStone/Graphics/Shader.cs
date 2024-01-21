@@ -1,20 +1,28 @@
-﻿using SharpStone.Core;
-using SharpStone.Platform.OpenGL;
-
+﻿using SharpStone.Platform.OpenGL;
 using static SharpStone.Platform.OpenGL.GL;
 using static SharpStone.Logging;
-using System.Text;
+using static SharpStone.Application;
+using SharpStone.Core;
 using System.Numerics;
 using SharpStone.Maths;
+using System.Text;
 
-
-namespace SharpStone.Rendering.OpenGL;
-internal unsafe class OpenGLShader : IShader
+namespace SharpStone.Graphics;
+public unsafe class Shader
 {
     private uint _id;
     public string Name { get; private set; }
 
-    public OpenGLShader(string name, string vertexSrc, string fragmentSrc)
+    public static Shader Create(string name, string vertexSrc, string fragmentSrc)
+        => new(name, vertexSrc, fragmentSrc);
+
+    public static Shader Create(string name)
+    {
+        var shader = ResourcesManager.GetShaderSource(name);
+        return Create(name, shader.VertexShaderSource, shader.FragmentShaderSource);
+    }
+
+    private Shader(string name, string vertexSrc, string fragmentSrc)
     {
         _id = glCreateProgram();
         Name = name;
@@ -33,7 +41,7 @@ internal unsafe class OpenGLShader : IShader
         Name = name;
 
     }
-    ~OpenGLShader()
+    ~Shader()
     {
         Dispose();
     }
@@ -53,7 +61,7 @@ internal unsafe class OpenGLShader : IShader
             glGetShaderiv(id, ShaderParameterName.InfoLogLength, &length);
             var message = glGetShaderInfoLog(id, length);
 
-            Logger.Error<OpenGLShader>(message);
+            Logger.Error<Shader>(message);
         }
 
         return id;
@@ -93,7 +101,7 @@ internal unsafe class OpenGLShader : IShader
 
     public void SetIntArray(string name, int[] values)
     {
-        fixed(int* pValues = values)
+        fixed (int* pValues = values)
         {
             glUniform1iv(GetUniformedLocation(name), values.Length, pValues);
         }
@@ -101,7 +109,7 @@ internal unsafe class OpenGLShader : IShader
 
     public unsafe void SetMatrix4(string name, Matrix4x4 value)
     {
-        fixed(float* pValues = value.ToFloats().ToArray())
+        fixed (float* pValues = value.ToFloats().ToArray())
         {
             glUniformMatrix4fv(GetUniformedLocation(name), 1, false, pValues);
         }
@@ -130,8 +138,9 @@ internal unsafe class OpenGLShader : IShader
     private readonly Dictionary<string, int> _locationCache = [];
     private int GetUniformedLocation(string name)
     {
-        if(_locationCache.ContainsKey(name)) { 
-            return _locationCache[name]; 
+        if (_locationCache.ContainsKey(name))
+        {
+            return _locationCache[name];
         }
 
         var location = glGetUniformLocation(_id, name);
@@ -140,8 +149,8 @@ internal unsafe class OpenGLShader : IShader
         {
             int count = 0;
             glGetProgramiv(_id, ProgramPropertyARB.ActiveUniforms, &count);
-            Logger.Warning<OpenGLShader>($"Active Uniforms: {count}!");
-                
+            Logger.Warning<Shader>($"Active Uniforms: {count}!");
+
             for (uint i = 0; i < count; i++)
             {
                 int bufSize = 0;
@@ -150,12 +159,12 @@ internal unsafe class OpenGLShader : IShader
                 uint type;
                 var sName = new StringBuilder();
                 glGetActiveUniform(_id, i, bufSize, &length, &size, &type, sName);
-                Logger.Warning<OpenGLShader>($"Uniform #{i} Type: {type} {sName}!");
+                Logger.Warning<Shader>($"Uniform #{i} Type: {type} {sName}!");
             }
 
-            Logger.Warning<OpenGLShader>($"Uniform {name} doesn't exist!");
+            Logger.Warning<Shader>($"Uniform {name} doesn't exist!");
         }
-            
+
         _locationCache[name] = location;
         return location;
     }

@@ -1,10 +1,9 @@
-﻿using static SharpStone.Platform.OpenGL.GL;
+﻿using SharpStone.Platform.OpenGL;
+using static SharpStone.Platform.OpenGL.GL;
 using static SharpStone.Logging;
-using SharpStone.Platform.OpenGL;
-using System.Runtime.InteropServices;
 
-namespace SharpStone.Rendering.OpenGL;
-internal unsafe class OpenGLIndexBuffer : IIndexBuffer
+namespace SharpStone.Graphics;
+public unsafe class IndexBuffer
 {
     private readonly uint[] _indeces;
 
@@ -12,7 +11,10 @@ internal unsafe class OpenGLIndexBuffer : IIndexBuffer
     private readonly int _size;
     public int Count => _indeces.Length;
 
-    public OpenGLIndexBuffer(uint[] indeces)
+    public static IndexBuffer Create(uint[] indeces)
+        => new(indeces);
+
+    private IndexBuffer(uint[] indeces)
     {
         _indeces = indeces;
         _id = glGenBuffer();
@@ -27,9 +29,9 @@ internal unsafe class OpenGLIndexBuffer : IIndexBuffer
 
     public void Dispose()
     {
-        if( _id != 0 )
+        if (_id != 0)
         {
-            fixed(uint* pId = &_id)
+            fixed (uint* pId = &_id)
             {
                 glDeleteBuffers(1, pId);
                 _id = 0;
@@ -43,3 +45,4 @@ internal unsafe class OpenGLIndexBuffer : IIndexBuffer
         glBindBuffer(BufferTargetARB.ElementArrayBuffer, 0);
     }
 }
+
