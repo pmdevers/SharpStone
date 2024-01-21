@@ -3,6 +3,12 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 
 namespace SharpStone.Graphics;
+
+public struct CameraData
+{
+    public Matrix4x4 ProjectionView;
+};
+
 public class Renderer
 {
     public const int MaxQuads = 20000;
@@ -25,6 +31,9 @@ public class Renderer
         new Vector4(0.5f, 0.5f, 0.0f, 1.0f),
         new Vector4(-0.5f, 0.5f, 0.0f, 1.0f)
     ];
+
+    private static UniformBuffer _cameraUnformBuffer;
+    private static CameraData _cameraBuffer;
 
     public static bool Init()
     {
@@ -55,21 +64,23 @@ public class Renderer
         _quadShader = Shader.Create("UISolid");
         _quadShader.Bind();
 
+        _cameraUnformBuffer = UniformBuffer.Create<CameraData>(0);
+
         return true;
     }
 
     public static void BeginScene(Camera camera)
     {
+        _cameraBuffer.ProjectionView = camera.ProjectionView;
+        _cameraUnformBuffer.SetData(_cameraBuffer);
         StartBatch();
     }
     public static void BeginScene(Camera camera, Matrix4x4 transform)
     {
-        Matrix4x4.Invert(transform, out var inverse);
-        var viewProjection = camera.GetViewProjection() * inverse;
+        _cameraBuffer.ProjectionView = camera.ProjectionView * transform;
+        _cameraUnformBuffer.SetData(_cameraBuffer);
 
         StartBatch();
-
-        //CameraBuffer.ViewProjection = camera.GetProjection() * Inverse(transform)
     }
     public static void EndScene()
     {
@@ -115,7 +126,25 @@ public class Renderer
         var translation = Matrix4x4.CreateTranslation(v3Position);
         var scaling = Matrix4x4.CreateScale(v3Size);
 
-        var transform = scaling * translation;
+        Matrix4x4.Invert(translation * scaling, out var inverted);
+
+        for (int i = 0; i < _baseQuadPositions.Length; i++)
+        {
+            var t = Vector4.Transform(_baseQuadPositions[i], inverted);
+            var quadVertex = new QuadVertex
+            {
+                Position = new Vector3(t.X, t.Y, t.Z),
+                Color = new Vector4(color.R, color.G, color.B, color.A),
+            };
+
+            _quads.Add(quadVertex);
+        }
+    }
+
+    public static void DrawQuad(Matrix4x4 transform, Color color, int entityId)
+    {
+        if(_quads.Count >= MaxVertices)
+            NextBatch();
 
         for (int i = 0; i < _baseQuadPositions.Length; i++)
         {

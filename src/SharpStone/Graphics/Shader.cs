@@ -1,11 +1,10 @@
-﻿using SharpStone.Platform.OpenGL;
-using static SharpStone.Platform.OpenGL.GL;
-using static SharpStone.Logging;
-using static SharpStone.Application;
-using SharpStone.Core;
-using System.Numerics;
+﻿using SharpStone.Core;
 using SharpStone.Maths;
+using SharpStone.Platform.OpenGL;
+using System.Numerics;
 using System.Text;
+
+using static SharpStone.Platform.OpenGL.GL;
 
 namespace SharpStone.Graphics;
 public unsafe class Shader
@@ -18,7 +17,7 @@ public unsafe class Shader
 
     public static Shader Create(string name)
     {
-        var shader = ResourcesManager.GetShaderSource(name);
+        var shader = ResourceManager.GetResource<ShaderSource>(name);
         return Create(name, shader.VertexShaderSource, shader.FragmentShaderSource);
     }
 

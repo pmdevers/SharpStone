@@ -1,10 +1,58 @@
-﻿using SharpStone.Core;
+﻿namespace SharpStone.Core;
 
-namespace SharpStone;
-
-public static class Logging
+public enum LogLevel
 {
-    public static ILogger Logger = new ConsoleLogger();
+    Info,
+    Debug,
+    Warning,
+    Error,
+    Fatal,
+}
+
+public interface ILogger
+{
+    void Log(LogLevel level, string name, string message);
+}
+
+public static class Logger
+{
+    private static readonly ILogger _instance = new ConsoleLogger();
+
+    public static void Log(LogLevel level, string name, string message)
+    {
+        _instance.Log(level, name, message);
+    }
+    public static void Log<T>(this ILogger logger, LogLevel level, string message)
+        => logger.Log(level, typeof(T).Name, message);
+
+    public static void Assert<T>(bool assert, string message)
+    {
+#if DEBUG
+        if (!assert)
+        {
+            Warning<T>(message);
+        }
+#endif
+    }
+
+    public static void Trace<T>(string message)
+    {
+#if DEBUG
+        Info<T>(message);
+#endif
+    }
+    public static void Info<T>(string message)
+        => _instance.Log<T>(LogLevel.Info, message);
+    public static void Error<T>(string message)
+        => _instance.Log<T>(LogLevel.Error, message);
+    public static void Debug<T>(string message)
+        => _instance.Log<T>(LogLevel.Debug, message);
+    public static void Warning<T>(string message)
+        => _instance.Log<T>(LogLevel.Warning, message);
+    public static void Fatal<T>(string message)
+        => _instance.Log<T>(LogLevel.Fatal, message);
+    public static void Log<T>(LogLevel level, string message)
+        => _instance.Log(level, typeof(T).Name, message);
 }
 
 internal class ConsoleLogger : ILogger

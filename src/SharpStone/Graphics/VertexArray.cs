@@ -1,6 +1,5 @@
 ﻿using SharpStone.Platform.OpenGL;
 using static SharpStone.Platform.OpenGL.GL;
-using static SharpStone.Logging;
 using SharpStone.Core;
 
 namespace SharpStone.Graphics;

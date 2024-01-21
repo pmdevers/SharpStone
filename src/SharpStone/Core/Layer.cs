@@ -1,14 +1,6 @@
 ﻿using SharpStone.Events;
 
 namespace SharpStone.Core;
-public interface ILayerStack : IEnumerable<Layer>
-{
-    void OnEvent(Event e);
-    void PushLayer(Layer layer);
-    void PopLayer(Layer layer);
-    void PushOverlay(Layer layer);
-    void PopOverlay(Layer overlay);
-}
 
 public abstract class Layer(string name)
 {

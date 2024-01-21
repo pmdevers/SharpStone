@@ -1,6 +1,7 @@
 ﻿using System.Collections;
+using SharpStone.Core;
 
-namespace SharpStone.Gui.Controls;
+namespace SharpStone.Gui;
 
 
 public class ControlCollection(BaseControl owner) : IEnumerable<BaseControl>
@@ -8,7 +9,7 @@ public class ControlCollection(BaseControl owner) : IEnumerable<BaseControl>
     private List<BaseControl> _controls = new(200);
     public void Add(BaseControl control)
     {
-        if(string.IsNullOrEmpty(control.Name))
+        if (string.IsNullOrEmpty(control.Name))
         {
             control.Name = control.GetType().Name + UserInterface.GetUniqueId();
         }
@@ -18,7 +19,7 @@ public class ControlCollection(BaseControl owner) : IEnumerable<BaseControl>
         _controls.Add(control);
     }
 
-    public void Clear() 
+    public void Clear()
     {
         foreach (var control in _controls)
         {
@@ -49,9 +50,11 @@ public class ControlContainer : BaseControl
 
     public override void Draw()
     {
-        foreach(var control in Controls)
+        foreach (var control in Controls)
         {
-            control.Draw();
+            if(control.Visible) { 
+                control.Draw();
+            }
         }
     }
 

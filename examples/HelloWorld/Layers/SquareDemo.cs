@@ -3,16 +3,15 @@ using SharpStone.Graphics;
 using SharpStone.Maths;
 using System.Numerics;
 
-using static SharpStone.Application;
-
 namespace HelloWorld.Layers;
 internal class SquareDemo() : Layer("Square Demo")
 {
-    private VertexArray _vba;
-    private Shader _shader;
+    private Camera _camera = new OrthographicCamera(-3f, 3f, -3f, 3f);
+    private readonly VertexArray _vba = VertexArray.Create();
+    private readonly Shader _shader = Shader.Create("default");
 
-    private float r = 0.1f;
-    private float increment = 1f;
+    private float _r = 0.1f;
+    private float _increment = 1f;
 
     public override void OnAttach()
     {
@@ -28,7 +27,6 @@ internal class SquareDemo() : Layer("Square Demo")
             2,3,0
         ];
 
-        _vba = VertexArray.Create();
         var vbo = VertexBuffer.Create(positions);
         var ib = IndexBuffer.Create(indeces);
 
@@ -37,7 +35,6 @@ internal class SquareDemo() : Layer("Square Demo")
         _vba.AddVertexBuffer(vbo);
         _vba.SetIndexBuffer(ib);
 
-        _shader = Shader.Create("default");
         _shader.Bind();
     }
 
@@ -47,18 +44,20 @@ internal class SquareDemo() : Layer("Square Demo")
         RenderCommand.SetClearColor(Color.Blue);
         RenderCommand.Clear();
 
-        if (r > 1.0f)
+        if (_r > 1.0f)
         {
-            increment = -0.05f;
+            _increment = -0.05f;
         }
-        else if (r < 0.0f)
+        else if (_r < 0.0f)
         {
-            increment = 0.05f;
+            _increment = 0.05f;
         }
 
-        r += increment;
+        _r += _increment;
 
-        _shader.SetFloat4("u_Color", new(r, 0.0f, 0.0f, 1.0f));
+        _shader.SetFloat4("u_Color", new(_r, 0.0f, 0.0f, 1.0f));
+        _shader.SetMatrix4("u_ViewProjection", _camera.ProjectionView);
+
         RenderCommand.DrawIndexed(_vba);
     }
 }

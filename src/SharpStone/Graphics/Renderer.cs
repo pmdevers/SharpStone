@@ -3,7 +3,6 @@ using SharpStone.Maths;
 using SharpStone.Platform.OpenGL;
 using System.Runtime.InteropServices;
 using static SharpStone.Platform.OpenGL.GL;
-using static SharpStone.Logging;
 
 namespace SharpStone.Graphics;
 

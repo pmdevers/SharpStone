@@ -5,5 +5,6 @@ Application.Create(c =>
 {
     c.Name = "Hello World";
 })
-.PushLayer(new SquareDemo())
+//.PushLayer(new SquareDemo())
+.PushLayer(new MainLayer())
 .Run();

@@ -1,17 +1,13 @@
-﻿using SharpStone.Core;
-using SharpStone.Events;
+﻿using SharpStone.Events;
 using System.Collections;
 
-using static SharpStone.Logging;
-
-namespace SharpStone.Layers;
-
-public class LayerStack : ILayerStack
+namespace SharpStone.Core;
+public class LayerStack : IEnumerable<Layer>
 {
     private int _layerIndex = 0;
     private readonly List<Layer> _layers = [];
 
-    public void PushLayer(Layer layer) 
+    public void PushLayer(Layer layer)
     {
         _layers.Insert(_layerIndex, layer);
         _layerIndex++;
@@ -50,6 +46,6 @@ public class LayerStack : ILayerStack
     public IEnumerator<Layer> GetEnumerator()
         => _layers.GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator()
-        => GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() 
+        => _layers.GetEnumerator();
 }

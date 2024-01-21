@@ -1,14 +1,13 @@
 ﻿using SharpStone.Core;
+using SharpStone.Events;
 using SharpStone.Platform.OpenGL;
 using SharpStone.Platform.SDL2;
-using static SharpStone.Platform.OpenGL.GL;
-using static SharpStone.Logging;
-using static SharpStone.Platform.SDL2.SDL;
 using System.Runtime.InteropServices;
-using SharpStone.Events;
-using static SharpStone.Application;
 
-namespace SharpStone.Window;
+using static SharpStone.Platform.OpenGL.GL;
+using static SharpStone.Platform.SDL2.SDL;
+
+namespace SharpStone.Windows;
 internal unsafe class SDL2Window : IWindow
 {
     private nint _window;
@@ -82,14 +81,17 @@ internal unsafe class SDL2Window : IWindow
             switch (e.type)
             {
                 case SDL_EventType.SDL_QUIT:
-                    Instance.OnEvent(new WindowCloseEvent());
+                    Application.Instance.OnEvent(new WindowCloseEvent());
+                    break;
+                case SDL_EventType.SDL_KEYDOWN:
+                    Application.Instance.OnEvent(new KeyPressedEvent((int)e.key.keysym.sym, e.key.repeat));
                     break;
                 case SDL_EventType.SDL_WINDOWEVENT:
                     switch (e.window.windowEvent)
                     {
                         case SDL_WindowEventID.SDL_WINDOWEVENT_RESIZED:
                         case SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED:
-                            Instance.OnEvent(new WindowResizedEvent(e.window.data1, e.window.data2));
+                            Application.Instance.OnEvent(new WindowResizedEvent(e.window.data1, e.window.data2));
                             break;
                         default
                             : break;

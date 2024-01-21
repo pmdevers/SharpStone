@@ -1,6 +1,5 @@
 ﻿using SharpStone.Platform.OpenGL;
 using static SharpStone.Platform.OpenGL.GL;
-using static SharpStone.Logging;
 
 namespace SharpStone.Graphics;
 public unsafe class IndexBuffer
