@@ -55,9 +55,19 @@ internal class SquareDemo() : Layer("Square Demo")
 
         _r += _increment;
 
+        _shader.Bind();
         _shader.SetFloat4("u_Color", new(_r, 0.0f, 0.0f, 1.0f));
         _shader.SetMatrix4("u_ViewProjection", _camera.ProjectionView);
 
         RenderCommand.DrawIndexed(_vba);
+
+
+        Renderer.BeginScene(_camera);
+
+        Renderer.DrawQuad(new(0, 0), new(1f, 1f), Color.Green);
+
+        Renderer.EndScene();
+
+
     }
 }

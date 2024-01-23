@@ -36,6 +36,16 @@ public static unsafe partial class GL
         return ret[0];
     }
 
+    public static unsafe uint glCreateTexture()
+    {
+        uint[] ret = new uint[1];
+        fixed (uint* retp = ret)
+        {
+            glCreateTextures(TextureTarget.Texture2d, 1, retp);
+        }
+        return ret[0];
+    }
+
     public static unsafe uint glGenVertexArray()
     {
         uint[] ret = new uint[1];

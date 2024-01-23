@@ -14,4 +14,9 @@
 	<ItemGroup>
 		<EmbeddedResource Include="Assets\**\*.*" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="StbiSharp" Version="1.2.1" />
+	  <PackageReference Include="System.Drawing.Common" Version="8.0.1" />
+	</ItemGroup>
 </Project>

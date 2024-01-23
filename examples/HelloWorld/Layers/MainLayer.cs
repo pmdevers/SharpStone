@@ -2,27 +2,53 @@
 using SharpStone.Events;
 using SharpStone.Graphics;
 using SharpStone.Gui;
+using SharpStone.Gui.Controls;
 using SharpStone.Maths;
 using System.Numerics;
 
 namespace HelloWorld.Layers;
 
+public class TestCamera : Camera
+{
+    public override Matrix4x4 ProjectionView => Matrix4x4.CreateTranslation(new Vector3(1, 1, 0));
+}
+
 internal class MainLayer : Layer
 {
+    private Camera _camera = new OrthographicCamera(0, Window.Width, Window.Height, 0);
+    private Texture2D _texture = Texture2D.Create("wall");
+
     public MainLayer() : base("Sandbox Main Layer")
     {
+        //UserInterface.Visible = false;
+
+        //UserInterface.Add(new TestElement()
+        //{
+        //    Position = new Vector2(0, 0),
+        //    Size = new(200, 200),
+        //    RelativeTo = Corner.Center
+        //});
+
         UserInterface.Add(new TestElement()
         {
-            Position = new Vector2(-0.5f, -0.5f),
-            Size = new(1, 1),
+            Position = new Vector2(0, 0),
+            Size = new(100, 50),
+            RelativeTo = Corner.Center,
+            Transparency = 100,
         });
     }
 
     public override void OnUpdate(float v)
     {
-        RenderCommand.SetViewPort(0, 0, Window.Width, Window.Height);
-        RenderCommand.SetClearColor(Color.Blue);
-        RenderCommand.Clear();
+        //RenderCommand.SetViewPort(0, 0, Window.Width, Window.Height);
+        //RenderCommand.SetClearColor(Color.CornflowerBlue);
+        //RenderCommand.Clear();
+
+        //UserInterface.Clear();
+
+        
+
+        //Renderer.DrawQuad(new Vector2(40, 40), new(100, 50), _texture, 1, Color.Yellow, Matrix4x4.Identity);
     }
 
     public override void OnEvent(Event @event)

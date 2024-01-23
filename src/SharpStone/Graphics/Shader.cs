@@ -87,7 +87,6 @@ public unsafe class Shader
         glUniform3f(GetUniformedLocation(name), value.X, value.Y, value.Z);
     }
 
-
     public void SetFloat4(string name, Vector4 value)
     {
         glUniform4f(GetUniformedLocation(name), value.X, value.Y, value.Z, value.W);

@@ -7,4 +7,5 @@ Application.Create(c =>
 })
 //.PushLayer(new SquareDemo())
 .PushLayer(new MainLayer())
+//.PushLayer(new TextureDemo())
 .Run();

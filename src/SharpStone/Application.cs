@@ -1,6 +1,7 @@
 ﻿using SharpStone.Core;
 using SharpStone.Events;
 using SharpStone.Graphics;
+using SharpStone.Gui;
 using System.Reflection;
 
 namespace SharpStone;
@@ -61,6 +62,7 @@ public class Application
 
         Logger.Trace<Application>($"Event Raised: {e.Name}.");
 
+        UserInterface.OnEvent(e);
         _layers.OnEvent(e);
     }
 

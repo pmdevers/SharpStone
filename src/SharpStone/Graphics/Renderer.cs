@@ -13,6 +13,9 @@ public static unsafe class RenderCommand
         glEnable(EnableCap.DebugOutput);
         glEnable(EnableCap.DebugOutputSynchronous);
 
+        glEnable(EnableCap.Blend);
+        glBlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+        
         var pCallback = Marshal.GetFunctionPointerForDelegate(DebugCallback);
         glDebugMessageCallback(pCallback, nint.Zero);
     }

@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics;
+using System.Numerics;
 
 namespace SharpStone.Graphics;
 public class OrthographicCamera 
@@ -11,7 +12,14 @@ public class OrthographicCamera
 
     public OrthographicCamera(float left, float right, float bottom, float top)
     {
-        _projectionMatrix = Matrix4x4.CreateOrthographicOffCenter(left,right,bottom,top,-1f, 1f);
+        _projectionMatrix = Matrix4x4.CreateOrthographicOffCenter(left, right, bottom, top, -1f, 1f);
+        _viewMatrix = Matrix4x4.Identity;
+        ProjectionView = _projectionMatrix * _viewMatrix;
+    }
+
+    public OrthographicCamera(float width, float height)
+    {
+        _projectionMatrix = Matrix4x4.CreateOrthographic(width, height, -1f, 1f);
         _viewMatrix = Matrix4x4.Identity;
         ProjectionView = _projectionMatrix * _viewMatrix;
     }
@@ -33,7 +41,7 @@ public class OrthographicCamera
             RecalculateViewMatix();
         }
     }
-    public override Matrix4x4 ProjectionView { get; protected set; }
+    public override Matrix4x4 ProjectionView { get; set; }
     public void RecalculateViewMatix()
     {
         var transform = Matrix4x4.CreateTranslation(_position)

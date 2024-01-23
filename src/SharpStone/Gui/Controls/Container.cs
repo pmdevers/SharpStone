@@ -1,10 +1,11 @@
 ﻿using System.Collections;
-using SharpStone.Core;
+using SharpStone.Graphics;
+using SharpStone.Maths;
 
-namespace SharpStone.Gui;
+namespace SharpStone.Gui.Controls;
 
 
-public class ControlCollection(BaseControl owner) : IEnumerable<BaseControl>
+public class ControlCollection(BaseControl? owner) : IEnumerable<BaseControl>
 {
     private List<BaseControl> _controls = new(200);
     public void Add(BaseControl control)
@@ -17,6 +18,9 @@ public class ControlCollection(BaseControl owner) : IEnumerable<BaseControl>
         control.Parent = owner;
 
         _controls.Add(control);
+
+        //if(control.Parent is null) 
+        control.OnResize();
     }
 
     public void Clear()
@@ -40,19 +44,27 @@ public class ControlCollection(BaseControl owner) : IEnumerable<BaseControl>
 
 public class ControlContainer : BaseControl
 {
-    public ControlContainer(int left, int right, int width, int height)
+    public ControlContainer(float left, float right, float width, float height)
     {
         Position = new(left, right);
         Size = new(width, height);
         Controls = new ControlCollection(this);
+        RelativeTo = Corner.TopLeft;
+        
     }
+
     public ControlCollection Controls { get; }
+    public Color BackgroundColor { get; set; } = UserInterface.Theme.Surface;
+
 
     public override void Draw()
     {
+       UserInterface.DrawQuad(Position, Size, BackgroundColor);
+
         foreach (var control in Controls)
         {
-            if(control.Visible) { 
+            if (control.Visible)
+            {
                 control.Draw();
             }
         }
@@ -71,6 +83,15 @@ public class ControlContainer : BaseControl
         foreach (var control in Controls)
         {
             control.Dispose();
+        }
+    }
+
+    public override void OnResize()
+    {
+        base.OnResize();
+        foreach (var control in Controls)
+        {
+            control.OnResize();
         }
     }
 }

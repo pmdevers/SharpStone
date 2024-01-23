@@ -1,6 +1,8 @@
 using FluentAssertions;
 using SharpStone.Core;
+using SharpStone.Graphics;
 using SharpStone.Maths;
+using SharpStone.Utils;
 using System.Numerics;
 
 namespace SharpStone.Tests;
@@ -57,6 +59,51 @@ public class Tests
     }
 
     [Test]
+    public void QuadTest()
+    {
+        Vector4[] _baseQuadPositions = [
+            new Vector4(-0.5f, -0.5f, 0.0f, 1.0f),
+            new Vector4(0.5f, -0.5f, 0.0f, 1.0f),
+            new Vector4(0.5f, 0.5f, 0.0f, 1.0f),
+            new Vector4(-0.5f, 0.5f, 0.0f, 1.0f)
+        ];
+
+        var result = GenerateQuadVertices(new Vector2(0, 0), new Vector2(3,3));
+
+        Renderer.DrawQuad(new Vector2(0, 0), new Vector2(3, 3), Color.White);
+
+        //Vector4 position1 = Vector4.Transform(new Vector2(-0.5f, -0.5f), scale);
+        //Vector4 position2 = Vector4.Transform(new Vector2( 0.5f, -0.5f), scale);
+        //Vector4 position3 = Vector4.Transform(new Vector2( 0.5f,  0.5f), scale);
+        //Vector4 position4 = Vector4.Transform(new Vector2(-0.5f,  0.5f), scale);
+
+
+
+
+    }
+
+    static Vector4[] GenerateQuadVertices(Vector2 position, Vector2 size)
+    {
+        // Vertices in local space
+        Vector4[] localVertices =
+        [
+            new Vector4(-0.5f, -0.5f, 0.0f, 1.0f), // Bottom left
+            new Vector4( 0.5f, -0.5f, 0.0f, 1.0f), // Bottom right
+            new Vector4( 0.5f,  0.5f, 0.0f, 1.0f), // Top right
+            new Vector4(-0.5f,  0.5f, 0.0f, 1.0f)  // Top left
+        ];
+
+        // Apply position and size to each vertex
+        for (int i = 0; i < localVertices.Length; i++)
+        {
+            localVertices[i].X = localVertices[i].X * size.X + position.X;
+            localVertices[i].Y = localVertices[i].Y * size.Y + position.Y;
+        }
+
+        return localVertices;
+    }
+
+    [Test]
     public void Resources()
     {
         var resource = ResourceManager.GetResource<Shader>("UISolid");
@@ -91,6 +138,11 @@ public class Tests
         var TranslationMatrix = Matrix4x4.CreateOrthographicOffCenter(0, width, 0, height, -1, 1);
         TranslationMatrix = TranslationMatrix * Matrix4x4.CreateScale(1, -1, 1);
         var TranslatedPoint = Vector4.Transform(new Vector4(width, height, 0, 1), TranslationMatrix);
+
+    }
+
+    public void Matrix()
+    {
 
     }
 
@@ -142,5 +194,15 @@ public class Tests
 
         _quadIndices.Should().BeEquivalentTo( expected, o => o.WithStrictOrdering());
 
+    }
+
+    [Test]
+    public void TextureResource()
+    {
+        ResourceManager.AddAssembly(GetType().Assembly);
+
+        var value = ResourceManager.GetResource<TextureSource>("SharpStone");
+        
+        
     }
 }
