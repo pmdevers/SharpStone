@@ -3,11 +3,11 @@ using static SharpStone.GlobalConfiguration;
 
 namespace SharpStone.Core;
 
-public struct WindowArgs(string title)
+public struct WindowArgs(string title, int width = 1280, int height = 720)
 {
     public string Title { get; set; } = title;
-    public int Width { get; set; } = 1280;
-    public int Height { get; set; } = 720;
+    public int Width { get; set; } = width;
+    public int Height { get; set; } = height;
     public bool Resizable { get; set; } = false;
     public bool AlwaysOnTop { get; set; } = false;
 }

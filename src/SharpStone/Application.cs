@@ -2,18 +2,24 @@
 using SharpStone.Events;
 using SharpStone.Graphics;
 using SharpStone.Gui;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace SharpStone;
 
-public struct ApplicationConfig()
+public class ApplicationConfig()
 {
     public string Name { get;set; }
     public Assembly AssetsAssembly { get; set; } = Assembly.GetEntryAssembly();
+    public int Width { get; set; } = 1280;
+    public int Height { get; set; } = 720;
 }
 
 public class Application
 {
+    private const float LOW_LIMIT = 0.0167f;
+    private const float HIGH_LIMIT = 0.1f;
+
     private static Application? _instance;
     public static Application Instance => _instance ?? throw new InvalidOperationException();
 
@@ -34,7 +40,7 @@ public class Application
         Logger.Assert<Application>(_instance == null, "Application was already running.");
         _instance = this;
 
-        Window.Init(new WindowArgs(applicationConfig.Name));
+        Window.Init(new WindowArgs(applicationConfig.Name, applicationConfig.Width, applicationConfig.Height));
         RenderCommand.Init();
         Renderer.Init();
         UserInterface.Init();
@@ -89,11 +95,24 @@ public class Application
         IsRunning = true;
         Logger.Info<Application>("Main Loop started.");
 
+
+        var sw = Stopwatch.StartNew();
+        var lastTime = sw.ElapsedMilliseconds;
+
         while (IsRunning)
         {
+            var currentTime = sw.ElapsedMilliseconds;
+            var deltaTime = currentTime - lastTime / 1000f;
+            if (deltaTime < LOW_LIMIT)
+                deltaTime = LOW_LIMIT;
+            else if (deltaTime > HIGH_LIMIT)
+                deltaTime = HIGH_LIMIT;
+
+            lastTime = currentTime;
+
             foreach (var layer in _layers)
             {
-                layer.OnUpdate(0f);
+                layer.OnUpdate(deltaTime);
             }
 
             UserInterface.Update();

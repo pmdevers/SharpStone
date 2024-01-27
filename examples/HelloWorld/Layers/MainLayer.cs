@@ -91,4 +91,9 @@ internal class MainLayer : Layer
 
         return false;
     }
+
+    public override void OnAttach()
+    {
+        throw new NotImplementedException();
+    }
 }
