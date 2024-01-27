@@ -1,41 +1,30 @@
-﻿using SharpStone.Configuration;
-using SharpStone.Core;
+﻿using SharpStone.Core;
 using SharpStone.Events;
+using SharpStone.Graphics;
 using SharpStone.Gui;
-using SharpStone.Layers;
-using SharpStone.Rendering;
-using SharpStone.Resources;
-using SharpStone.Window;
+using System.Diagnostics;
 using System.Reflection;
-using static SharpStone.Logging;
 
 namespace SharpStone;
 
-public struct ApplicationConfig()
+public class ApplicationConfig()
 {
     public string Name { get;set; }
-    public RenderApi RenderApi { get; set; } = RenderApi.OpenGL;
     public Assembly AssetsAssembly { get; set; } = Assembly.GetEntryAssembly();
+    public int Width { get; set; } = 1280;
+    public int Height { get; set; } = 720;
 }
 
 public class Application
 {
+    private const float LOW_LIMIT = 0.0167f;
+    private const float HIGH_LIMIT = 0.1f;
+
     private static Application? _instance;
     public static Application Instance => _instance ?? throw new InvalidOperationException();
-    public static IWindow Window => Instance._window;
-    public static IRenderApi Renderer => Instance._renderApi;
-    public static IConfigurationManager Config => Instance._config;
-    public static IResourceManager ResourcesManager => Instance._resources;
-    public static IUserInterface UI => Instance._userInterface;
-    
-    private readonly IWindow _window;
-    private readonly IRenderApi _renderApi;
-    private readonly IConfigurationManager _config;
-    private readonly IResourceManager _resources;
-    private readonly ILayerStack _layers;
-    private readonly IUserInterface _userInterface;
 
-    public static RenderApi Api => RenderApi.OpenGL;
+    private readonly LayerStack _layers = new();
+
     public bool IsRunning { get; private set; }
     public bool IsMinimized { get; private set; }
     
@@ -49,16 +38,12 @@ public class Application
     public Application(ApplicationConfig applicationConfig)
     {
         Logger.Assert<Application>(_instance == null, "Application was already running.");
-        
         _instance = this;
-        _window = WindowService.Create(new WindowArgs(applicationConfig.Name));
-        _renderApi = RenderService.Create(applicationConfig.RenderApi);
-        _config = new ConfigurationManager();
-        _resources = new ResourceManager(applicationConfig.AssetsAssembly);
-        _layers = new LayerStack();
-        _userInterface = UserInterface.Create();
 
-        _renderApi.Renderer2D.Init();
+        Window.Init(new WindowArgs(applicationConfig.Name, applicationConfig.Width, applicationConfig.Height));
+        RenderCommand.Init();
+        Renderer.Init();
+        UserInterface.Init();
     }
 
     public Application PushLayer(Layer layer)
@@ -83,6 +68,7 @@ public class Application
 
         Logger.Trace<Application>($"Event Raised: {e.Name}.");
 
+        UserInterface.OnEvent(e);
         _layers.OnEvent(e);
     }
 
@@ -109,19 +95,31 @@ public class Application
         IsRunning = true;
         Logger.Info<Application>("Main Loop started.");
 
+
+        var sw = Stopwatch.StartNew();
+        var lastTime = sw.ElapsedMilliseconds;
+
         while (IsRunning)
         {
+            var currentTime = sw.ElapsedMilliseconds;
+            var deltaTime = currentTime - lastTime / 1000f;
+            if (deltaTime < LOW_LIMIT)
+                deltaTime = LOW_LIMIT;
+            else if (deltaTime > HIGH_LIMIT)
+                deltaTime = HIGH_LIMIT;
+
+            lastTime = currentTime;
+
             foreach (var layer in _layers)
             {
-                layer.OnUpdate(0f);
+                layer.OnUpdate(deltaTime);
             }
 
-            _userInterface.Update();
-            _window.Update();
+            UserInterface.Update();
+            Window.Update();
         }
 
-        _renderApi.Renderer2D.Shutdown();
-        _window.Shutdown();
+        Window.Shutdown();
     }
 
     public void Close()

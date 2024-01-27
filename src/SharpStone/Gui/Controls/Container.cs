@@ -1,14 +1,16 @@
 ﻿using System.Collections;
+using SharpStone.Graphics;
+using SharpStone.Maths;
 
 namespace SharpStone.Gui.Controls;
 
 
-public class ControlCollection(BaseControl owner) : IEnumerable<BaseControl>
+public class ControlCollection(BaseControl? owner) : IEnumerable<BaseControl>
 {
     private List<BaseControl> _controls = new(200);
     public void Add(BaseControl control)
     {
-        if(string.IsNullOrEmpty(control.Name))
+        if (string.IsNullOrEmpty(control.Name))
         {
             control.Name = control.GetType().Name + UserInterface.GetUniqueId();
         }
@@ -16,9 +18,12 @@ public class ControlCollection(BaseControl owner) : IEnumerable<BaseControl>
         control.Parent = owner;
 
         _controls.Add(control);
+
+        //if(control.Parent is null) 
+        control.OnResize();
     }
 
-    public void Clear() 
+    public void Clear()
     {
         foreach (var control in _controls)
         {
@@ -39,19 +44,29 @@ public class ControlCollection(BaseControl owner) : IEnumerable<BaseControl>
 
 public class ControlContainer : BaseControl
 {
-    public ControlContainer(int left, int right, int width, int height)
+    public ControlContainer(float left, float right, float width, float height)
     {
         Position = new(left, right);
         Size = new(width, height);
         Controls = new ControlCollection(this);
+        RelativeTo = Corner.TopLeft;
+        
     }
+
     public ControlCollection Controls { get; }
+    public Color BackgroundColor { get; set; } = UserInterface.Theme.Surface;
+
 
     public override void Draw()
     {
-        foreach(var control in Controls)
+       UserInterface.DrawQuad(Position, Size, BackgroundColor);
+
+        foreach (var control in Controls)
         {
-            control.Draw();
+            if (control.Visible)
+            {
+                control.Draw();
+            }
         }
     }
 
@@ -68,6 +83,15 @@ public class ControlContainer : BaseControl
         foreach (var control in Controls)
         {
             control.Dispose();
+        }
+    }
+
+    public override void OnResize()
+    {
+        base.OnResize();
+        foreach (var control in Controls)
+        {
+            control.OnResize();
         }
     }
 }

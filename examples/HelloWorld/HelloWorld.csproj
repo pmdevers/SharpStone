@@ -18,4 +18,12 @@
 		<EmbeddedResource Include="Assets\**\*.*" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Remove="Assets\Shaders\Texture.shader" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Assets\Textures\" />
+	</ItemGroup>
+
 </Project>

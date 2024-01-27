@@ -1,28 +1,33 @@
 ﻿using SharpStone.Maths;
-using SharpStone.Rendering;
-using System.Numerics;
-using static SharpStone.Application;
 
 namespace SharpStone.Gui.Controls;
 public class TestElement : BaseControl
 {
+    
     public TestElement()
     {
-        
-    }
 
+    }
     public override void Draw()
     {
-        Renderer.Renderer2D.DrawQuad(new Vector2(0f, 0f), new Vector2(200f, 200f), Color.FromHEX("352F44"));
+        var alpha = 1f * Math.Clamp(Transparency / 100f, 0, 1);
+        var color = new Color(1f, 1f, 1f, alpha);
+
+        
+
+        UserInterface.DrawQuad(CorrectedPosition, Size, color);
+        //UserInterface.DrawQuad(Position + new Vector2(3), Size - new Vector2(5), UserInterface.Theme.Primary.Color300);
+
+
     }
 
     public override void Update()
     {
-        
+
     }
 
     protected override void Disposing(bool disposing)
     {
-        
+
     }
 }

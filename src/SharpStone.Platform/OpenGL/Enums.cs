@@ -627,7 +627,16 @@ public enum TextureWrapMode : uint
 
 public enum PixelType : uint
 {
-	UnsignedByte332 = 0x8032,
+    Byte = 0x1400,
+    UnsignedByte = 0x1401,
+    Short = 0x1402,
+    UnsignedShort = 0x1403,
+    Int = 0x1404,
+    UnsignedInt = 0x1405,
+    Float = 0x1406,
+    HalfFloat = 0x140B,
+    Bitmap = 0x1A00,
+    UnsignedByte332 = 0x8032,
 	UnsignedShort4444 = 0x8033,
 	UnsignedShort5551 = 0x8034,
 	UnsignedInt8888 = 0x8035,

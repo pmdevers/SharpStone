@@ -1,6 +1,5 @@
 ﻿using SharpStone.Core;
 using SharpStone.Events;
-using static SharpStone.Logging;
 
 public class EventDispatcher
 {
