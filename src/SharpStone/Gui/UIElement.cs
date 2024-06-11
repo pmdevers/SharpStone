@@ -91,17 +91,18 @@ public abstract class BaseControl : IDisposable
         }
         else
         {
-            if (RelativeTo == Corner.BottomLeft) CorrectedPosition = Position;
-            else if (RelativeTo == Corner.TopLeft)
+            if (RelativeTo == Corner.BottomLeft)
                 CorrectedPosition = new Vector2(Position.X, Parent.Size.Y - Position.Y - Size.Y);
+            else if (RelativeTo == Corner.TopLeft)
+                CorrectedPosition = Parent.Position + Position;
             else if (RelativeTo == Corner.BottomRight)
-                CorrectedPosition = new Vector2(Parent.Size.X - Position.X - Size.X, Position.Y);
-            else if (RelativeTo == Corner.TopRight)
                 CorrectedPosition = new Vector2(Parent.Size.X - Position.X - Size.X, Parent.Size.Y - Position.Y - Size.Y);
+            else if (RelativeTo == Corner.TopRight)
+                CorrectedPosition = new Vector2(Parent.Size.X - Position.X - Size.X, Position.Y);
             else if (RelativeTo == Corner.Bottom)
-                CorrectedPosition = new Vector2(Parent.Size.X / 2 - Size.X / 2 + Position.X, Position.Y);
-            else if (RelativeTo == Corner.Top)
                 CorrectedPosition = new Vector2(Parent.Size.X / 2 - Size.X / 2 + Position.X, Parent.Size.Y - Position.Y - Size.Y);
+            else if (RelativeTo == Corner.Top)
+                CorrectedPosition = new Vector2(Parent.Size.X / 2 - Size.X / 2 + Position.X, Position.Y);
             else if (RelativeTo == Corner.Fill)
             {
                 CorrectedPosition = new Vector2(0, 0);

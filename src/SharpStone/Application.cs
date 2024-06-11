@@ -2,6 +2,7 @@
 using SharpStone.Events;
 using SharpStone.Graphics;
 using SharpStone.Gui;
+using SharpStone.Layers;
 using System.Diagnostics;
 using System.Reflection;
 
@@ -94,6 +95,11 @@ public class Application
     {
         IsRunning = true;
         Logger.Info<Application>("Main Loop started.");
+
+        if (_layers.Count() == 0)
+        {
+            PushLayer(new DebugLayer());
+        }
 
 
         var sw = Stopwatch.StartNew();

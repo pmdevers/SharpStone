@@ -93,7 +93,7 @@ public class Renderer
         #region Textures
 
         _whiteTexture = Texture2D.Create(new TextureSpecification());
-        _whiteTexture.SetData([ 0xffffffff ]);
+        _whiteTexture.SetData([ 0xffffffff ], Platform.OpenGL.PixelFormat.Rgba);
 
         TextureSlots.Add( _whiteTexture );
 
@@ -167,12 +167,12 @@ public class Renderer
 
     public static void DrawQuad(Vector2 position, Vector2 size, Texture2D texture, float tilingFactor, Color color)
     {
-        var v3Position = new Vector3(position, 1.0f);
+        var v3Position = new Vector3(position, 0.0f);
         var v3Size = new Vector3(size, 1.0f);
 
         var translation = Matrix4x4.CreateTranslation(v3Position);
         var scaling = Matrix4x4.CreateScale(v3Size);
-        var transform = translation + scaling;
+        var transform = translation * scaling;
 
         DrawQuad(transform, texture, tilingFactor, color);
     }
@@ -208,7 +208,7 @@ public class Renderer
     public static void DrawQuad(Vector2 position, Vector2 size, Color color)
     {
         var v3Position = new Vector3(position, 0.0f);
-        var v3Size = new Vector3(size, 0.0f);
+        var v3Size = new Vector3(size, 1.0f);
 
         var translation = Matrix4x4.CreateTranslation(v3Position);
         var scaling = Matrix4x4.CreateScale(v3Size);

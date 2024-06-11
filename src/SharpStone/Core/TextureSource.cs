@@ -1,4 +1,4 @@
-﻿using StbiSharp;
+﻿using StbImageSharp;
 
 namespace SharpStone.Core;
 
@@ -11,17 +11,22 @@ public record struct TextureSource(int width, int height, byte[] data) : IResour
     public int Width { get; } = width;
     public int Height { get; } = height;
     public byte[] Data { get; } = data;
+    //public int Channels { get; } = channels;
 
     public static TextureSource FromStream(Stream stream)
     {
         var ms = new MemoryStream();
         stream.CopyTo(ms);
 
-        Stbi.SetFlipVerticallyOnLoad(true);
+        var bytes = ms.ToArray();
 
-        var data = Stbi.LoadFromMemory(ms, 0);      
+        StbImage.stbi_set_flip_vertically_on_load(1);
 
-        return new TextureSource(data.Width, data.Height, data.Data.ToArray()); ;
+        var data = ImageResult.FromMemory(bytes, ColorComponents.RedGreenBlueAlpha);
+
+        
+
+        return new TextureSource(data.Width, data.Height, data.Data); ;
     }
 
 

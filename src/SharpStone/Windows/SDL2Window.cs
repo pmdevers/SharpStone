@@ -102,8 +102,6 @@ internal unsafe class SDL2Window : IWindow
         GL_SwapWindow(_window);
     }
 
-    
-
     public bool Shutdown()
     {
         GL_DeleteContext(_glContext);

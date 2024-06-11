@@ -20,7 +20,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="StbiSharp" Version="1.2.1" />
+	  <PackageReference Include="StbImageSharp" Version="2.27.13" />
+	  <PackageReference Include="StbImageWriteSharp" Version="1.16.7" />
+	  <PackageReference Include="StbTrueTypeSharp" Version="1.26.12" />
 	  <PackageReference Include="System.Drawing.Common" Version="8.0.1" />
 	</ItemGroup>
 </Project>

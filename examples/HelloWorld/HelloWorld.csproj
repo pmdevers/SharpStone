@@ -19,11 +19,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Assets\Fonts\Orion.ttf" />
 	  <None Remove="Assets\Shaders\Texture.shader" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Folder Include="Assets\Textures\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Update="Assets\Fonts\Orion.ttf">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </EmbeddedResource>
 	</ItemGroup>
 
 </Project>

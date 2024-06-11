@@ -40,7 +40,12 @@ public unsafe class Texture2D : IDisposable
         Width = source.Width;
         Height = source.Height;
         Data = source.Data;
-        glTextureStorage2D(_id, 1, InternalFormat.Rgba8, source.Width, source.Width);
+
+        var internalFormat = InternalFormat.Rgba8;
+        var pixelFormat = PixelFormat.Rgba;
+        
+
+        glTextureStorage2D(_id, 1, internalFormat, source.Width, source.Width);
 
         //glTextureParameteri(_id, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
         //glTextureParameteri(_id, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.LinearDetailSgis);
@@ -48,7 +53,7 @@ public unsafe class Texture2D : IDisposable
         //glTextureParameteri(_id, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
         //glTextureParameteri(_id, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
 
-        SetData(source.data);
+        SetData(source.data, pixelFormat);
     }
 
     public void Bind(uint slot)
@@ -61,14 +66,14 @@ public unsafe class Texture2D : IDisposable
 
     }
 
-    public void SetData<T>(T[] data)
+    public void SetData<T>(T[] data, PixelFormat pixelFormat)
     {
         fixed (void* ptrData = data)
         {
             glTextureSubImage2D(_id, 0, 0, 0,
                 Width,
                 Height,
-                PixelFormat.Rgba,
+                pixelFormat,
                 PixelType.UnsignedByte,
                 ptrData);
         }

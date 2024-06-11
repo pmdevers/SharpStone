@@ -124,14 +124,20 @@ public class Theme(
             Color.FromHEX("#000000"));
 }
 
+public class UICamera(float width, float height) : Camera
+{
+    public override Matrix4x4 ProjectionView =>
+        Matrix4x4.CreateOrthographicOffCenter(0, width, height, 0, -1, 1);
+}
+
 
 public class UserInterface
 {
     private static Texture2D _texture;
     private static uint _uniqueId = 0;
-    public static bool Visible { get; set; }
+    public static bool Visible { get; set; } = false;
     public static Vector4 Margin { get; set; } = new Vector4(10);
-    public static OrthographicCamera Camera { get; private set; }
+    public static Camera Camera { get; private set; }
     public static ControlContainer Main { get; private set; }
     public static Theme Theme { get; set; } = Theme.Default;
 
@@ -143,13 +149,12 @@ public class UserInterface
     {
         Width = Window.Width;
         Height = Window.Height;
-        //Main = new ControlContainer(Margin.X, Margin.Y, Window.Width - Margin.X - Margin.Z, Window.Height - Margin.Y - Margin.W);
+        
         _texture = Texture2D.Create("SharpStone");
 
         Main = new ControlContainer(10, 10, Width - 20, Height - 20);
-        Camera = new OrthographicCamera(Width, Height);
-        Camera.ProjectionView = Tranforms.TopLeftCorner;
-        Camera.RecalculateViewMatix();
+        Camera = new UICamera(Window.Width, Window.Height);
+        
         Visible = true;
 
         Main.OnResize();

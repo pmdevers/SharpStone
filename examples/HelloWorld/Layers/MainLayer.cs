@@ -16,11 +16,16 @@ public class TestCamera : Camera
 internal class MainLayer : Layer
 {
     private Camera _camera = new OrthographicCamera(0, Window.Width, Window.Height, 0);
-    private Texture2D _texture = Texture2D.Create("wall");
+    private Texture2D _texture; // = Texture2D.Create("wall");
+
 
     public MainLayer() : base("Sandbox Main Layer")
     {
-        //UserInterface.Visible = false;
+        //UserInterface.Visible = true;
+
+        var font = Font.Create("Orion");
+        _texture = font.Texture;
+
 
         //UserInterface.Add(new TestElement()
         //{
@@ -29,26 +34,28 @@ internal class MainLayer : Layer
         //    RelativeTo = Corner.Center
         //});
 
-        UserInterface.Add(new TestElement()
-        {
-            Position = new Vector2(0, 0),
-            Size = new(100, 50),
-            RelativeTo = Corner.Center,
-            Transparency = 100,
-        });
-    }
+        //UserInterface.Add(new TestElement()
+        //{
+        //    Position = new Vector2(100, 100),
+        //    Size = new(100, 50),
+        //    RelativeTo = Corner.Center,
+        //    Transparency = 100,
+        //});
+    } 
 
     public override void OnUpdate(float v)
     {
-        //RenderCommand.SetViewPort(0, 0, Window.Width, Window.Height);
-        //RenderCommand.SetClearColor(Color.CornflowerBlue);
-        //RenderCommand.Clear();
+        RenderCommand.SetViewPort(0, 0, Window.Width, Window.Height);
+        RenderCommand.SetClearColor(Color.CornflowerBlue);
+        RenderCommand.Clear();
 
         //UserInterface.Clear();
 
-        
+        Renderer.BeginScene(_camera);
 
-        //Renderer.DrawQuad(new Vector2(40, 40), new(100, 50), _texture, 1, Color.Yellow, Matrix4x4.Identity);
+        Renderer.DrawQuad(new Vector2(10f, 10f), new(100f, 100f), _texture, 1, Color.Yellow);
+
+        Renderer.EndScene();
     }
 
     public override void OnEvent(Event @event)
@@ -94,6 +101,6 @@ internal class MainLayer : Layer
 
     public override void OnAttach()
     {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 }

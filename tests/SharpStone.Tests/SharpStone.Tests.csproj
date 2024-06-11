@@ -7,6 +7,7 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
 	<ItemGroup>
@@ -14,6 +15,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Assets\Fonts\Orion.ttf" />
 	  <None Remove="Assets\Textures\testimage.jpg" />
 	</ItemGroup>
 
@@ -31,6 +33,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\SharpStone\SharpStone.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Assets\Fonts\Orion.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>
